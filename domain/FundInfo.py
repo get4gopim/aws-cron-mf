@@ -41,10 +41,10 @@ class FundInfo:
 
     def serialize(self):
         return {
-            'mfId': self.__mfId,
-            'mfUrl': self.__mfUrl,
-            'mfName': self.__mfName,
-            'asOn': self.__asOn,
-            'nav': self.__nav,
-            'lastUpdated': self.__lastUpdated
+            "mfId": self.__mfId,
+            "mfUrl": self.__mfUrl,
+            "mfName": self.__mfName,
+            "asOn": self.__asOn,
+            "nav": self.__nav,
+            "lastUpdated": self.__lastUpdated
         }

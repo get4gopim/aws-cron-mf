@@ -27,8 +27,21 @@ provider:
 functions:
   hello:
     handler: handler.hello
-
-
+    events:
+      - schedule:
+          # Invoke Lambda function every minute
+          rate: rate(2 minutes)
+          enabled: false
+      - schedule:
+          # Invoke Lambda function every 2nd minute from Mon-Fri
+          rate: cron(0/5 * ? * MON-FRI *)
+          enabled: true
+  #cronHandler:
+    #handler: handler.hello
+    #events:
+      # Invoke Lambda function every 2nd minute from Mon-Fri
+      #- schedule:
+           #rate: cron(0/2 * ? * MON-FRI *)
 
 plugins:
   - serverless-python-requirements
