@@ -47,10 +47,12 @@ def api_add_fund():
 # A route to update fund
 @app.route('/api/v1/funds', methods=['PUT'])
 def api_update_fund():
-    LOGGER.info("api_add_fund: " + request)
-    LOGGER.info("request.json: " + request.json)
+    LOGGER.info("api_add_fund: " + str(request))
+    LOGGER.info("request.json: " + str(request.json))
+
     id = request.json.get('mfId')
     fund_url = request.json.get('mfUrl')
+
     if not id or not fund_url:
         return jsonify({'error': 'Please provide id and url'}), 400
 
