@@ -14,17 +14,54 @@ service: aws-cron-mf
 # Check out our docs for more details
 frameworkVersion: '2'
 
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+custom:
+  wsgi:
+    app: mf_endpoint.app
+    packRequirements: false
+  pythonRequirements:
+    dockerizePip: non-linux
+
 provider:
   name: aws
   runtime: python3.9
   lambdaHashingVersion: 20201221
   stage: dev
   region: ap-south-1
+  apiGateway:
+    shouldStartNameWithService: true
   iam:
     role: arn:aws:iam::575834425578:role/lambda_dynamodb_logs
 
 
 functions:
+  app:
+    handler: wsgi_handler.handler
+    events:
+      - http:
+          path: /
+          method: get
+      - http:
+          path: /api/v1/funds
+          method: get
+      - http:
+          path: /api/v1/funds
+          method: post
+      - http:
+          path: /api/v1/funds
+          method: put
+      - http:
+          path: /api/v1/funds/{id}
+          method: get
+      - http:
+          path: /api/v1/funds/update/nav
+          method: get
+      - http:
+          path: /api/v1/funds/update/nav/{id}
+          method: get
+
   hello:
     handler: handler.hello
     events:
@@ -33,15 +70,27 @@ functions:
           rate: rate(2 minutes)
           enabled: false
       - schedule:
-          # Invoke Lambda function every 2nd minute from Mon-Fri
-          rate: cron(0/5 * ? * MON-FRI *)
+          # Invoke Lambda function Run at 06:30 am (UTC):12 AM IST every Monday through Saturday
+          rate: cron(30 6 ? * MON-SAT *)
           enabled: true
-  #cronHandler:
-    #handler: handler.hello
-    #events:
-      # Invoke Lambda function every 2nd minute from Mon-Fri
-      #- schedule:
-           #rate: cron(0/2 * ? * MON-FRI *)
+      - schedule:
+          # Invoke Lambda function Run at 23:30 pm (UTC):5 AM IST every Monday through Saturday
+          rate: cron(30 23 ? * MON-SAT *)
+          enabled: true
+      - schedule:
+          # Invoke Lambda function Run at 12:30 am (UTC):6 AM IST every Monday through Saturday
+          rate: cron(30 0 ? * MON-SAT *)
+          enabled: true
+      - schedule:
+          # Invoke Lambda function Run at 4:00 am (UTC):9:30 AM IST every Monday through Saturday
+          rate: cron(0 4 ? * MON-SAT *)
+          enabled: true
+      - schedule:
+          # Invoke Lambda function Run at 10:30 am (UTC):4 PM IST every Monday through Saturday
+          rate: cron(30 10 ? * MON-SAT *)
+          enabled: true
+      - schedule:
+          # Invoke Lambda function Run at 7:00 am (UTC):12:30 PM IST every Monday through Saturday
+          rate: cron(0 7 ? * MON-SAT *)
+          enabled: true
 
-plugins:
-  - serverless-python-requirements
