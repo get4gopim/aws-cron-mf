@@ -51,11 +51,11 @@ async def get_fund_info(future, location):
             LOGGER.info(f'fund parsing took {time.time() - parse_start} secs.')
     except ClientConnectorError as ex:
         LOGGER.error(f'Unable to connect fund API : {repr(ex)}')
-        info = FundInfo.FundInfo("", '0', '0', "", "")
+        info = FundInfo.FundInfo("", "", "", "", "", "")
         info.set_error(ex)
     except BaseException as ex:
         LOGGER.error(f'Unable to connect fund API : {repr(ex)}')
-        info = FundInfo.FundInfo("", '0', '0', "", "")
+        info = FundInfo.FundInfo("", "", "", "", "", "")
         info.set_error(ex)
 
     LOGGER.info(f'FundAPI Time Taken {time.time() - start}')

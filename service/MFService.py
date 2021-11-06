@@ -3,6 +3,7 @@ import boto3
 from domain import FundInfo
 from botocore.exceptions import ClientError
 
+
 def get_all_funds(dynamodb=None):
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
@@ -85,7 +86,7 @@ def add_fund(fundInfo, dynamodb=None):
         'as_on': fundInfo.get_asOn(),
         'mf_url': fundInfo.get_mfUrl(),
         'mf_name': fundInfo.get_mfName(),
-        'last_updated': fundInfo.get_asOn(),
+        'last_updated': fundInfo.get_lastUpdated(),
         'nav': fundInfo.get_nav()
     }
 
