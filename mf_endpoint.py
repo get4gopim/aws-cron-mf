@@ -4,9 +4,11 @@ import os
 import json
 
 from flask import jsonify, request
-from service import MFService, HtmlParser2
-from domain import FundInfo
+from service import MFService, UserMFService, HtmlParser2
+from domain import FundInfo, UserFund
 from datetime import datetime
+
+from flask import render_template
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -15,6 +17,67 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format='%(asctime)
 
 LOGGER = logging.getLogger(__name__)
 
+# ------------------------------------------ Web Page Render -------------------
+
+
+@app.route('/hello/')
+@app.route('/hello/<name>')
+def hello(name=None):
+    return render_template('hello.html', name=name)
+
+
+@app.route('/funds/<user_id>')
+def funds(user_id=None):
+    f_list = UserMFService.update_user_mf_funds(user_id, None)
+    return render_template('funds.html', f_list=f_list)
+# ------------------------------------------ Funds User API -------------------
+
+
+# A route to get fund by given id
+@app.route('/api/v1/user/<user_id>/funds/<mf_id>', methods=['PUT'])
+def api_get_user_fund(user_id, mf_id):
+    LOGGER.info("user_id: " + user_id + " mf_id: " + mf_id)
+    f_list = UserMFService.update_user_mf_funds(user_id, mf_id)
+    serialized_list = [e.serialize() for e in f_list]
+    return jsonify(serialized_list)
+
+
+@app.route('/api/v1/user/<user_id>/funds', methods=['GET'])
+def api_get_funds_by_user_id(user_id):
+    LOGGER.info("api_get_funds_by_user_id")
+    f_list = UserMFService.get_all_user_funds(user_id)
+    serialized_list = [e.serialize() for e in f_list]
+    return jsonify(serialized_list)
+
+
+@app.route('/api/v1/user/<user_id>/funds/<mf_id>', methods=['GET'])
+def get_user_and_fund_by_id(user_id, mf_id):
+    LOGGER.info("get_user_and_fund_by_id")
+    f_list = UserMFService.get_user_and_fund_by_id(user_id, mf_id)
+    serialized_list = [e.serialize() for e in f_list]
+    return jsonify(serialized_list)
+
+
+@app.route('/api/v1/user/<user_id>/funds', methods=['POST'])
+def api_user_add_fund(user_id):
+    print("user_id: " + user_id)
+    print("api_add_fund: " + str(request) )
+    print("request.json: " + str(request.json) )
+
+    userId = request.json.get('userId')
+    mfId = request.json.get('mfId')
+
+    if not userId or not mfId:
+        return jsonify({'error': 'Please provide userId and mfId'}), 400
+
+    response = UserMFService.add_user_id_and_fund(user_fund_info=UserFund.UserFund(userId, mfId, request.json.get('purchaseValue'), request.json.get('purchaseNav'),
+                            request.json.get('stampPercent'), request.json.get('actualValue'), request.json.get('units'), request.json.get('latestValue'),
+                            request.json.get('profitLoss'), request.json.get('dateCreated'), datetime.now().__str__() ) )
+
+    return jsonify(response)
+
+
+# ------------------------------------------ Funds API -------------------
 
 # A route to get all funds in db
 @app.route('/api/v1/funds', methods=['GET'])
@@ -73,6 +136,8 @@ def api_get_fund(id):
 # A route to update the price for all funds - costlier operation
 @app.route('/api/v1/funds/update/nav', methods=['GET'])
 def update_price_all():
+    print('update all started :: ' + datetime.now().__str__())
+
     funds_list = MFService.get_all_funds()
 
     resp_list = []
@@ -84,6 +149,8 @@ def update_price_all():
                                info.get_nav(), datetime.now().__str__())
         response = MFService.update_fund(mf)
         resp_list.append(response)
+
+    print('update all completed :: ' + datetime.now().__str__())
 
     return jsonify(resp_list)
 

@@ -62,7 +62,30 @@ functions:
           path: /api/v1/funds/update/nav/{id}
           method: get
 
-  hello:
+      - http:
+          path: /api/v1/user/{user_id}/funds
+          method: get
+      - http:
+          path: /api/v1/user/{user_id}/funds
+          method: post
+      - http:
+          path: /api/v1/user/{user_id}/funds/{mf_id}
+          method: get
+      - http:
+          path: /api/v1/user/{user_id}/funds/{mf_id}
+          method: put
+
+      - http:
+          path: /hello
+          method: get
+      - http:
+          path: /hello/{name}
+          method: get
+      - http:
+          path: /funds/{user_id}
+          method: get
+
+  scheduler:
     handler: handler.hello
     events:
       - schedule:
@@ -71,11 +94,11 @@ functions:
           enabled: false
       - schedule:
           # Invoke Lambda function Run at 06:30 am (UTC):12 AM IST every Monday through Saturday
-          rate: cron(30 6 ? * MON-SAT *)
+          rate: cron(30 6 * * ? *)
           enabled: true
       - schedule:
-          # Invoke Lambda function Run at 23:30 pm (UTC):5 AM IST every Monday through Saturday
-          rate: cron(30 23 ? * MON-SAT *)
+          # Invoke Lambda function Run at 23:30 pm (UTC):5 AM IST everyDay
+          rate: cron(30 23 * * ? *)
           enabled: true
       - schedule:
           # Invoke Lambda function Run at 12:30 am (UTC):6 AM IST every Monday through Saturday
@@ -87,10 +110,10 @@ functions:
           enabled: true
       - schedule:
           # Invoke Lambda function Run at 10:30 am (UTC):4 PM IST every Monday through Saturday
-          rate: cron(30 10 ? * MON-SAT *)
+          rate: cron(30 10 * * ? *)
           enabled: true
       - schedule:
-          # Invoke Lambda function Run at 7:00 am (UTC):12:30 PM IST every Monday through Saturday
-          rate: cron(0 7 ? * MON-SAT *)
-          enabled: true
+          # Invoke Lambda function testing everyDay
+          rate: cron(15 4 * * ? *)
+          enabled: false
 

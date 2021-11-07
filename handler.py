@@ -7,16 +7,7 @@ from service import MFService
 
 
 def hello(event, context):
-    print ('hello:: ' + datetime.now().__str__())
-
-    mfAsOnDate = datetime.now().strftime("%d-%b-%Y")
-    print ("date " + mfAsOnDate)
-
-    #mf = FundInfo.FundInfo('MIB009', 'https://www.moneycontrol.com/mutual-funds/nav/idbi-ultra-short-term-fund/MIB009', info.get_mfName(), info.get_asOn(),  info.get_nav(), datetime.now().__str__())
-    #add_fund(mf)
-    #update_fund(mf)
-    #fund_info = get_fund('MIB009')
-    #print (fund_info.get_mfName())
+    print ('update all started :: ' + datetime.now().__str__())
 
     funds_list = MFService.get_all_funds()
 
@@ -36,6 +27,8 @@ def hello(event, context):
         "statusCode": 200,
         "body": json.dumps(body)
     }
+
+    print('update all completed :: ' + datetime.now().__str__())
 
     return response
 
