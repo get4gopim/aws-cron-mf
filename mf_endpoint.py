@@ -26,9 +26,14 @@ def hello(name=None):
     return render_template('hello.html', name=name)
 
 
+@app.route('/funds/<user_id>/update')
+def funds_update(user_id=None):
+    f_list = UserMFService.update_user_mf_funds(user_id, None)
+    return render_template('funds.html', f_list=f_list)
+
 @app.route('/funds/<user_id>')
 def funds(user_id=None):
-    f_list = UserMFService.update_user_mf_funds(user_id, None)
+    f_list = UserMFService.get_all_user_funds(user_id, None)
     return render_template('funds.html', f_list=f_list)
 # ------------------------------------------ Funds User API -------------------
 

@@ -84,6 +84,9 @@ functions:
       - http:
           path: /funds/{user_id}
           method: get
+      - http:
+          path: /funds/{user_id}/update
+          method: get
 
   scheduler:
     handler: handler.hello
