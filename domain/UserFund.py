@@ -19,6 +19,7 @@ class UserFund:
         self.mfName = ''
         self.nav = ''
         self.asOn = ''
+        self.percentile = ''
 
     def get_error(self):
         return self.error
@@ -77,6 +78,12 @@ class UserFund:
     def get_asOn(self):
         return self.asOn
 
+    def set_percentile(self, percentile):
+        self.percentile = percentile
+
+    def get_percentile(self):
+        return self.percentile
+
 
     def __str__(self):
         return "UserFund: [userId: " + str(self.__userId) + ", mfId: " + str(self.__mfId) \
@@ -96,10 +103,11 @@ class UserFund:
             "actualValue": str(self.__actualValue),
             "units": str(self.__units),
             "latestValue": str(self.__latestValue),
-            "profitLoss": str(self.__profitLoss),
+            "profitLoss": str(self.get_profitLoss()),
             "mfName": str(self.get_mfName()),
             "nav": str(self.get_nav()),
             "asOn": str(self.get_asOn()),
+            "percentile": str(self.get_percentile()),
             "dateCreated": self.__dateCreated,
             "dateModified": self.__dateModified
         }

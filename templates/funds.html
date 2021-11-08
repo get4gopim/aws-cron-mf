@@ -34,6 +34,7 @@
             <th>As On</th>
             <th>Purchase Value</th>
             <th>Profit/Loss</th>
+            <th>Percentage</th>
             <th>Last Updated</th>
         </tr>
         {% for row in f_list %}
@@ -43,6 +44,13 @@
             <td>{{ row.get_asOn() }}</td>
             <td>{{ row.get_purchaseValue() }}</td>
             <td>{{ row.get_profitLoss() }}</td>
+
+            {% if (row.get_percentile() < 0) %}
+                <td style="color: red;">{{ row.get_percentile() }} %</td>
+            {% else %}
+                <td style="color: blue;">{{ row.get_percentile() }} %</td>
+            {% endif %}
+
             <td>{{ row.get_dateModified() }}</td>
         </tr>
         {% endfor %}

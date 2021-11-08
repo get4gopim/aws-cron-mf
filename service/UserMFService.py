@@ -53,9 +53,7 @@ def update_mf(user_fund_info):
                           user_fund_info.get_stampPercent(), actual_val, units, latest_val,
                           profit_loss, user_fund_info.get_dateCreated(), datetime.now().__str__())
 
-        user_mf.set_nav(fund_info.get_nav())
-        user_mf.set_mfName(fund_info.get_mfName())
-        user_mf.set_asOn(fund_info.get_asOn())
+        set_additional_fields(user_fund_info, fund_info)
 
         update_fund (user_mf)
 
@@ -88,14 +86,21 @@ def get_all_user_funds(user_id, dynamodb=None):
                                           resp['stamp_percent'], resp['actual_value'], resp['units'], resp['latest_value'], resp['profit_loss'],
                                           resp['date_created'], resp['date_modified'])
 
-            user_fund_info.set_nav(fund_info.get_nav())
-            user_fund_info.set_mfName(fund_info.get_mfName())
-            user_fund_info.set_asOn(fund_info.get_asOn())
+            set_additional_fields(user_fund_info, fund_info)
 
             print('getAll_funds:: userId: ' + user_fund_info.get_userId() + " mfId: " + user_fund_info.get_mfId())
             fundList.append(user_fund_info)
 
     return fundList
+
+
+def set_additional_fields(user_fund_info, fund_info):
+    percentile = round((float(user_fund_info.get_profitLoss()) / float(user_fund_info.get_purchaseValue())) * 100, 2)
+
+    user_fund_info.set_nav(fund_info.get_nav())
+    user_fund_info.set_mfName(fund_info.get_mfName())
+    user_fund_info.set_asOn(fund_info.get_asOn())
+    user_fund_info.set_percentile(percentile)
 
 
 def get_user_and_fund_by_id(user_id, mf_id, dynamodb=None):
@@ -124,9 +129,7 @@ def get_user_and_fund_by_id(user_id, mf_id, dynamodb=None):
                                                resp['latest_value'], resp['profit_loss'],
                                                resp['date_created'], resp['date_modified'])
 
-            user_fund_info.set_nav(fund_info.get_nav())
-            user_fund_info.set_mfName(fund_info.get_mfName())
-            user_fund_info.set_asOn(fund_info.get_asOn())
+            set_additional_fields(user_fund_info, fund_info)
 
     return fundList
 
@@ -155,9 +158,7 @@ def get_user_and_fund_by_id_123(user_id, mf_id, dynamodb=None):
                                                resp['latest_value'], resp['profit_loss'],
                                                resp['date_created'], resp['date_modified'])
 
-            user_fund_info.set_nav(fund_info.get_nav())
-            user_fund_info.set_mfName(fund_info.get_mfName())
-            user_fund_info.set_asOn(fund_info.get_asOn())
+            set_additional_fields(user_fund_info, fund_info)
 
         return user_fund_info
 
