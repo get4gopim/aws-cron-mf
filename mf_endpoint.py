@@ -39,10 +39,10 @@ def funds(user_id=None):
 
 
 # A route to get fund by given id
-@app.route('/api/v1/user/<user_id>/funds/<mf_id>', methods=['PUT'])
-def api_get_user_fund(user_id, mf_id):
-    LOGGER.info("user_id: " + user_id + " mf_id: " + mf_id)
-    f_list = UserMFService.update_user_mf_funds(user_id, mf_id)
+@app.route('/api/v1/user/<user_id>/funds', methods=['PUT'])
+def api_get_user_fund(user_id):
+    LOGGER.info("user_id: " + user_id )
+    f_list = UserMFService.update_user_mf_funds(user_id)
     serialized_list = [e.serialize() for e in f_list]
     return jsonify(serialized_list)
 

@@ -35,29 +35,29 @@ def update_user_mf_funds(user_id, mf_id, dynamodb=None):
     return fundList
 
 
-def update_mf(user_fund_info):
-    user_mf = None
+def update_mf(user_fund_det):
+    user_fund_info = None
 
-    if user_fund_info:
-        fund_info = MFService.get_fund( user_fund_info.get_mfId() )
+    if user_fund_det:
+        fund_info = MFService.get_fund( user_fund_det.get_mfId() )
 
-        purchase_val = float(user_fund_info.get_purchaseValue())
-        stamp_value = purchase_val * (float(user_fund_info.get_stampPercent()) / 100)
+        purchase_val = float(user_fund_det.get_purchaseValue())
+        stamp_value = purchase_val * (float(user_fund_det.get_stampPercent()) / 100)
 
         actual_val = purchase_val - stamp_value
-        units = round( actual_val / float(user_fund_info.get_purchaseNav()), 4)
+        units = round( actual_val / float(user_fund_det.get_purchaseNav()), 4)
         latest_val = round( float(units) * float(fund_info.get_nav()), 4)
         profit_loss = round( latest_val - purchase_val, 4)
 
-        user_mf = UserFund.UserFund(user_fund_info.get_userId(), user_fund_info.get_mfId(), user_fund_info.get_purchaseValue(), user_fund_info.get_purchaseNav(),
-                          user_fund_info.get_stampPercent(), actual_val, units, latest_val,
-                          profit_loss, user_fund_info.get_dateCreated(), datetime.now().__str__())
+        user_fund_info = UserFund.UserFund(user_fund_det.get_userId(), user_fund_det.get_mfId(), user_fund_det.get_purchaseValue(), user_fund_det.get_purchaseNav(),
+                          user_fund_det.get_stampPercent(), actual_val, units, latest_val,
+                          profit_loss, user_fund_det.get_dateCreated(), datetime.now().__str__())
 
         set_additional_fields(user_fund_info, fund_info)
 
-        update_fund (user_mf)
+        update_fund (user_fund_info)
 
-    return user_mf
+    return user_fund_info
 
 
 def get_all_user_funds(user_id, dynamodb=None):
@@ -95,7 +95,11 @@ def get_all_user_funds(user_id, dynamodb=None):
 
 
 def set_additional_fields(user_fund_info, fund_info):
-    percentile = round((float(user_fund_info.get_profitLoss()) / float(user_fund_info.get_purchaseValue())) * 100, 2)
+    try:
+        percentile = round((float(user_fund_info.get_profitLoss()) / float(user_fund_info.get_purchaseValue())) * 100, 2)
+    except BaseException as ex:
+        print (f'Unable to calculate percentile : {fund_info.get_mfName()} :: {user_fund_info.get_profitLoss()} exception:: {repr(ex)}')
+        percentile = 0
 
     user_fund_info.set_nav(fund_info.get_nav())
     user_fund_info.set_mfName(fund_info.get_mfName())
