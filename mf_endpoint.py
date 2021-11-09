@@ -39,7 +39,7 @@ def funds(user_id=None):
 
 
 # A route to get fund by given id
-@app.route('/api/v1/user/<user_id>/funds', methods=['PUT'])
+@app.route('/api/v1/user/<user_id>/funds/update', methods=['GET'])
 def api_get_user_fund(user_id):
     LOGGER.info("user_id: " + user_id )
     f_list = UserMFService.update_user_mf_funds(user_id)

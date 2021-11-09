@@ -8,7 +8,7 @@ from boto3.dynamodb.conditions import And, Attr, Key
 from decimal import Decimal
 
 
-def update_user_mf_funds(user_id, mf_id, dynamodb=None):
+def update_user_mf_funds(user_id, dynamodb=None):
     print ('user id: ' + user_id)
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
