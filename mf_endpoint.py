@@ -28,13 +28,14 @@ def hello(name=None):
 
 @app.route('/funds/<user_id>/update')
 def funds_update(user_id=None):
-    f_list = UserMFService.update_user_mf_funds(user_id, None)
-    return render_template('funds.html', f_list=f_list)
+    view_fund = UserMFService.view_update_user_mf_funds(user_id)
+    return render_template('funds.html', view_fund=view_fund)
+
 
 @app.route('/funds/<user_id>')
 def funds(user_id=None):
-    f_list = UserMFService.get_all_user_funds(user_id, None)
-    return render_template('funds.html', f_list=f_list)
+    view_fund = UserMFService.view_all_user_mf_funds(user_id)
+    return render_template('funds.html', view_fund=view_fund)
 # ------------------------------------------ Funds User API -------------------
 
 

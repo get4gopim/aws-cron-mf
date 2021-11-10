@@ -92,10 +92,6 @@ functions:
     handler: handler.hello
     events:
       - schedule:
-          # Invoke Lambda function every minute
-          rate: rate(2 minutes)
-          enabled: false
-      - schedule:
           # Invoke Lambda function Run at 06:30 am (UTC):12 AM IST every Monday through Saturday
           rate: cron(30 6 * * ? *)
           enabled: true

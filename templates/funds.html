@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <title>Mutal Fund Report</title>
     <style>
-        table, th, td {
-          border: 1px solid white
-          border-collapse: collapse
-          border-color: #96D4D4
+        table {
+          border: 1px solid white;
+          border-collapse: collapse;
+          width: 100%;
         }
         th {
-          background-color: #96D4D4
+          border: 1px solid white;
+          background-color: #96D4D4;
         }
         td {
-          background-color: #F0F0F0
+          border: 1px solid white;
+          background-color: #F0F0F0;
         }
         th, td {
           padding-top: 10px;
@@ -25,36 +27,60 @@
 </head>
 <body>
 
-{% if f_list %}
+{% if view_fund %}
 <h1>Mutal Fund Info</h1>
-    <table>
+    <table style="width: 70%;">
         <tr>
-            <th>MF_NAME</th>
-            <th>NAV</th>
-            <th>As On</th>
-            <th>Purchase Value</th>
-            <th>Profit/Loss</th>
-            <th>Percentage</th>
-            <th>Last Updated</th>
+            <th style="width: 50%">Total Investment</th>
+            <td style="width: 50%">{{ view_fund['totalInvestment'] }}</td>
         </tr>
-        {% for row in f_list %}
         <tr>
-            <td>{{ row['mfName'] }}</td>
-            <td>{{ row.get_nav() }}</td>
-            <td>{{ row.get_asOn() }}</td>
-            <td>{{ row.get_purchaseValue() }}</td>
-            <td>{{ row.get_profitLoss() }}</td>
-
-            {% if (row.get_percentile() < 0) %}
-                <td style="color: red;">{{ row.get_percentile() }} %</td>
+            <th>Total Profit</th>
+            <td>{{ view_fund.get_totalProfit() }}</td>
+        </tr>
+        <tr>
+            <th>Overall Improvement %</th>
+            {% if (view_fund.get_totalPercentile() < 0) %}
+                <td style="color: red;">{{ view_fund.get_totalPercentile() }}</td>
             {% else %}
-                <td style="color: blue;">{{ row.get_percentile() }} %</td>
+                <td style="color: blue;">{{ view_fund.get_totalPercentile() }} %</td>
             {% endif %}
-
-            <td>{{ row.get_dateModified() }}</td>
         </tr>
-        {% endfor %}
     </table>
+
+    <br />
+    <br />
+
+    {% if view_fund.fundList %}
+        <table>
+            <tr>
+                <th>MF_NAME</th>
+                <th>NAV</th>
+                <th>As On</th>
+                <th>Purchase Value</th>
+                <th>Profit/Loss</th>
+                <th>Percentage</th>
+                <th>Last Updated</th>
+            </tr>
+            {% for row in view_fund.fundList %}
+            <tr>
+                <td>{{ row['mfName'] }}</td>
+                <td>{{ row.get_nav() }}</td>
+                <td>{{ row.get_asOn() }}</td>
+                <td>{{ row.get_purchaseValue() }}</td>
+                <td>{{ row.get_profitLoss() }}</td>
+
+                {% if (row.get_percentile() < 0) %}
+                    <td style="color: red;">{{ row.get_percentile() }} %</td>
+                {% else %}
+                    <td style="color: blue;">{{ row.get_percentile() }} %</td>
+                {% endif %}
+
+                <td>{{ row.get_dateModified() }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 
 {% else %}
   <h1>No Fund info found !</h1>

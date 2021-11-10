@@ -2,11 +2,40 @@ import boto3
 
 from service import MFService
 from datetime import datetime
-from domain import FundInfo, UserFund
+from domain import FundInfo, UserFund, ViewFund
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import And, Attr, Key
-from decimal import Decimal
 
+
+def view_update_user_mf_funds(user_id):
+    fundList = update_user_mf_funds(user_id, None)
+    return transform_view_fund(fundList)
+
+
+def view_all_user_mf_funds(user_id):
+    fundList = get_all_user_funds(user_id, None)
+    return transform_view_fund(fundList)
+
+
+def transform_view_fund(fundList):
+    view_fund = ViewFund.ViewFund()
+    view_fund.set_fundList(fundList)
+
+    if fundList:
+        total_purchase_val = 0
+        total_profit = 0
+        total_percentile = 0
+
+        for item in fundList:
+            total_purchase_val += float(item.get_purchaseValue())
+            total_profit += float(item.get_profitLoss())
+            total_percentile += float(item.get_percentile())
+
+        view_fund.set_totalInvestment(total_purchase_val)
+        view_fund.set_totalProfit(round(total_profit, 4))
+        view_fund.set_totalPercentile(total_percentile)
+
+    return view_fund
 
 def update_user_mf_funds(user_id, dynamodb=None):
     print ('user id: ' + user_id)
