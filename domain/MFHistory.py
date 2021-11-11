@@ -38,7 +38,7 @@ class MFHistory:
 
     def serialize(self):
         return {
-            "mfName": self.__mfName,
+            "mfName": self.mfName,
             "mfId": self.__mfId,
             "asOn": self.__asOn,
             "nav": self.__nav,

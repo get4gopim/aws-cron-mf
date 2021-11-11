@@ -36,7 +36,8 @@ def get_funds_history(mf_id, dynamodb=None):
     table = dynamodb.Table('nav_history')
 
     response = table.query(
-        KeyConditionExpression=Key('mf_id').eq(mf_id)
+        KeyConditionExpression=Key('mf_id').eq(mf_id),
+        ScanIndexForward=False,
     )
     print (str(response))
     data = response['Items']
