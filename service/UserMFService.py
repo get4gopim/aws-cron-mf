@@ -4,7 +4,8 @@ from service import MFService
 from datetime import datetime
 from domain import FundInfo, UserFund, ViewFund
 from botocore.exceptions import ClientError
-from boto3.dynamodb.conditions import Attr, Key
+from boto3.dynamodb.conditions import Attr, Key, And
+from functools import reduce
 
 
 def view_update_user_mf_funds(user_id):
@@ -37,6 +38,7 @@ def transform_view_fund(fundList):
         view_fund.set_totalPercentile(total_percentile)
 
     return view_fund
+
 
 def update_user_mf_funds(user_id, dynamodb=None):
     print ('user id: ' + user_id)
@@ -125,26 +127,53 @@ def get_all_user_funds(user_id, dynamodb=None):
 
 
 def set_additional_fields(user_fund_info, fund_info):
-    try:
-        percentile = round((float(user_fund_info.get_profitLoss()) / float(user_fund_info.get_purchaseValue())) * 100, 2)
-    except BaseException as ex:
-        print (f'Unable to calculate percentile : {fund_info.get_mfName()} :: {user_fund_info.get_profitLoss()} exception:: {repr(ex)}')
+    if fund_info:
         percentile = 0
 
-    user_fund_info.set_nav(fund_info.get_nav())
-    user_fund_info.set_mfName(fund_info.get_mfName())
-    user_fund_info.set_asOn(fund_info.get_asOn())
-    user_fund_info.set_percentile(percentile)
+        try:
+            percentile = round((float(user_fund_info.get_profitLoss()) / float(user_fund_info.get_purchaseValue())) * 100, 2)
+        except BaseException as ex:
+            print (f'Unable to calculate percentile : {fund_info.get_mfName()} :: {user_fund_info.get_profitLoss()} exception:: {repr(ex)}')
+
+        user_fund_info.set_nav(fund_info.get_nav())
+        user_fund_info.set_mfName(fund_info.get_mfName())
+        user_fund_info.set_asOn(fund_info.get_asOn())
+        user_fund_info.set_percentile(percentile)
+        user_fund_info.set_noOfDays( find_between_days(fund_info.get_asOn(), user_fund_info.get_dateCreated()) )
+    else:
+        print ('fund_info empty')
+
+
+def find_between_days(today, previous):
+    date_format = "%d-%b-%Y"
+    b = datetime.strptime(today, date_format)
+    a = datetime.strptime(previous, date_format)
+    delta = b - a
+    return delta.days
 
 
 def get_user_and_fund_by_id(user_id, mf_id, dynamodb=None):
-    print ('user id: ' + user_id + ';  mf id: ' + mf_id)
+
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
 
-    table = dynamodb.Table('user_mf')
+    TABLE_NAME = 'user_mf'
+    table = dynamodb.Table(TABLE_NAME)
 
-    response = table.scan(FilterExpression=Attr("user_id").eq(user_id) & Attr("mf_id").eq(mf_id))
+    print('user_id: ' + user_id + ';  mf id: ' + mf_id)
+
+    exp_attributes = {
+          ':pkVal': user_id,
+          ':skVal': mf_id
+    }
+
+    print (str(exp_attributes))
+
+    response = table.query(
+        TableName=TABLE_NAME,
+        KeyConditionExpression='user_id = :pkVal AND begins_with ( mf_id , :skVal )',
+        ExpressionAttributeValues=exp_attributes
+    )
     print (str(response))
     data = response['Items']
 
@@ -152,7 +181,7 @@ def get_user_and_fund_by_id(user_id, mf_id, dynamodb=None):
         response = dynamodb.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
         data.extend(response['Items'])
 
-    fundList = []
+    user_fund_list = []
     for resp in data:
         if resp:
             print(resp)
@@ -164,37 +193,9 @@ def get_user_and_fund_by_id(user_id, mf_id, dynamodb=None):
                                                resp['date_created'], resp['date_modified'])
 
             set_additional_fields(user_fund_info, fund_info)
+            user_fund_list.append(user_fund_info)
 
-    return fundList
-
-
-def get_user_and_fund_by_id_123(user_id, mf_id, dynamodb=None):
-    print ('user id: ' + user_id + ';  mf id: ' + mf_id)
-
-    if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
-
-    table = dynamodb.Table('user_mf')
-
-    try:
-        response = table.get_item(Key={'user_id': user_id, 'mf_id': mf_id})
-    except ClientError as e:
-        print(e.response['Error']['Message'])
-    else:
-        print (str(response))
-        resp = response['Item']
-        if resp:
-            print(resp)
-            fund_info = MFService.get_fund(resp['mf_id'])
-            user_fund_info = UserFund.UserFund(resp['user_id'], resp['mf_id'], resp['purchase_value'],
-                                               resp['purchase_nav'],
-                                               resp['stamp_percent'], resp['actual_value'], resp['units'],
-                                               resp['latest_value'], resp['profit_loss'],
-                                               resp['date_created'], resp['date_modified'])
-
-            set_additional_fields(user_fund_info, fund_info)
-
-        return user_fund_info
+    return user_fund_list
 
 
 def add_user_id_and_fund(user_fund_info, dynamodb=None):

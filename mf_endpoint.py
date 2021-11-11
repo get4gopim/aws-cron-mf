@@ -38,9 +38,9 @@ def funds(user_id=None):
     return render_template('funds.html', view_fund=view_fund)
 
 
-@app.route('/history/<id>')
-def history(id=None):
-    view_history = MFHistoryService.view_mf_history(id)
+@app.route('/funds/<user_id>/history/<mf_id>')
+def history(user_id=None, mf_id=None):
+    view_history = MFHistoryService.view_mf_history(user_id, mf_id)
     return render_template('history.html', view_history=view_history)
 # ------------------------------------------ Funds User API -------------------
 

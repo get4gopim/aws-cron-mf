@@ -96,7 +96,7 @@ functions:
           path: /funds/{user_id}/update
           method: get
       - http:
-          path: /history/{id}
+          path: /funds/{user_id}/history/{mf_id}
           method: get
 
   scheduler:
@@ -126,5 +126,33 @@ functions:
       - schedule:
           # Invoke Lambda function testing everyDay
           rate: cron(19 2 * * ? *)
-          enabled: true
+          enabled: false
 
+  user_fund_scheduler:
+    handler: handler.update_user_fund
+    timeout: 180 # in seconds
+    events:
+      - schedule:
+          # Invoke Lambda function Run at 06:45 am (UTC):12:15 AM IST every Monday through Saturday
+          rate: cron(45 6 * * ? *)
+          enabled: true
+      - schedule:
+          # Invoke Lambda function Run at 23:45 pm (UTC):5:15 AM IST everyDay
+          rate: cron(45 23 * * ? *)
+          enabled: true
+      - schedule:
+          # Invoke Lambda function Run at 12:45 am (UTC):6:15 AM IST every Monday through Saturday
+          rate: cron(45 0 ? * MON-SAT *)
+          enabled: true
+      - schedule:
+          # Invoke Lambda function Run at 4:15 am (UTC):9:45 AM IST every Monday through Saturday
+          rate: cron(15 4 ? * MON-SAT *)
+          enabled: true
+      - schedule:
+          # Invoke Lambda function Run at 10:45 am (UTC):4:15 PM IST every Monday through Saturday
+          rate: cron(45 10 * * ? *)
+          enabled: true
+      - schedule:
+          # Invoke Lambda function testing everyDay
+          rate: cron(25 11 * * ? *)
+          enabled: false

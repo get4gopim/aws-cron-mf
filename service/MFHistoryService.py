@@ -2,7 +2,7 @@ import boto3
 
 from datetime import datetime
 from domain import MFHistory, ViewHistory
-from service import MFService
+from service import MFService, UserMFService
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import And, Attr, Key
 
@@ -60,12 +60,17 @@ def get_funds_history(mf_id, dynamodb=None):
     return historyList
 
 
-def view_mf_history(mf_id):
+def view_mf_history(user_id, mf_id):
     historyList = get_funds_history(mf_id, None)
-    return transform_view_history(historyList)
+    user_fund_list = UserMFService.get_user_and_fund_by_id(user_id, mf_id)
+    return transform_view_history(historyList, user_fund_list)
 
 
-def transform_view_history(historyList):
+def transform_view_history(historyList, user_fund_list):
     view_history = ViewHistory.ViewHistory()
     view_history.set_historyList(historyList)
+    if user_fund_list:
+        user_fund = user_fund_list[0]
+        view_history.set_userFund(user_fund)
+
     return view_history

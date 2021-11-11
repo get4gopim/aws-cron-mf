@@ -2,7 +2,7 @@ import json
 
 from domain import FundInfo, MFHistory
 from datetime import datetime
-from service import HtmlParser2, MFService, MFHistoryService
+from service import HtmlParser2, MFService, MFHistoryService, UserMFService
 
 
 def hello(event, context):
@@ -36,6 +36,13 @@ def hello(event, context):
     print('update all completed :: ' + datetime.now().__str__())
 
     return response
+
+
+def update_user_fund(event, context):
+    user_id = 'user1'
+    print("update user fund started user_id: " + user_id + " @ " + datetime.now().__str__())
+    UserMFService.update_user_mf_funds(user_id)
+    print('update user fund completed :: ' + datetime.now().__str__())
 
 
 # Press the green button in the gutter to run the script.

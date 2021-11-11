@@ -20,6 +20,7 @@ class UserFund:
         self.nav = ''
         self.asOn = ''
         self.percentile = ''
+        self.noOfDays = 0
 
     def get_error(self):
         return self.error
@@ -77,6 +78,12 @@ class UserFund:
 
     def get_asOn(self):
         return self.asOn
+
+    def set_noOfDays(self, noOfDays):
+        self.noOfDays = noOfDays
+
+    def get_noOfDays(self):
+        return self.noOfDays
 
     def set_percentile(self, percentile):
         self.percentile = percentile

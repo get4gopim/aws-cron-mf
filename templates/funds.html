@@ -64,7 +64,7 @@
             </tr>
             {% for row in view_fund.fundList %}
             <tr>
-                <td><a href="/dev/history/{{ row.get_mfId() }}">{{ row['mfName'] }}</a></td>
+                <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_mfId() }}">{{ row['mfName'] }}</a></td>
                 <td>{{ row.get_nav() }}</td>
                 <td>{{ row.get_asOn() }}</td>
                 <td>{{ row.get_purchaseValue() }}</td>
