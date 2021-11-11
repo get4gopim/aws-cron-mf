@@ -1,9 +1,8 @@
 import json
 
-from domain import FundInfo
+from domain import FundInfo, MFHistory
 from datetime import datetime
-from service import HtmlParser2
-from service import MFService
+from service import HtmlParser2, MFService, MFHistoryService
 
 
 def hello(event, context):
@@ -17,6 +16,12 @@ def hello(event, context):
         info = HtmlParser2.call_fund_api(fund_url)
         mf = FundInfo.FundInfo(fund_info.get_mfId(), fund_info.get_mfUrl(), info.get_mfName(), info.get_asOn(), info.get_nav(), datetime.now().__str__())
         MFService.update_fund(mf)
+
+        try:
+            MFHistoryService.add_mf_nav_history(mf_history=MFHistory.MFHistory(fund_info.get_mfId(), info.get_asOn(),
+                                                                               info.get_nav(), datetime.now().__str__()))
+        except BaseException as ex:
+            print(f'Unable to update mf_history table id : {fund_info.get_mfId()} ex: {repr(ex)}')
 
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",

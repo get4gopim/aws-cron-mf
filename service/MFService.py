@@ -1,7 +1,9 @@
 import boto3
 
-from domain import FundInfo
+from domain import FundInfo, MFHistory
+from service import MFHistoryService
 from botocore.exceptions import ClientError
+from datetime import datetime
 
 
 def get_all_funds(dynamodb=None):
@@ -116,4 +118,5 @@ def update_fund(fundInfo, dynamodb=None):
         },
         ReturnValues="UPDATED_NEW"
     )
+
     return response

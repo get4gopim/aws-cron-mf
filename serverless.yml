@@ -39,6 +39,7 @@ provider:
 functions:
   app:
     handler: wsgi_handler.handler
+    timeout: 30 # in seconds
     events:
       - http:
           path: /
@@ -69,10 +70,17 @@ functions:
           path: /api/v1/user/{user_id}/funds
           method: post
       - http:
-          path: /api/v1/user/{user_id}/funds/{mf_id}
+          path: /api/v1/user/{user_id}/funds/{id}
           method: get
       - http:
           path: /api/v1/user/{user_id}/funds/update
+          method: get
+
+      - http:
+          path: /api/v1/history
+          method: post
+      - http:
+          path: /api/v1/history/{id}
           method: get
 
       - http:
@@ -87,9 +95,13 @@ functions:
       - http:
           path: /funds/{user_id}/update
           method: get
+      - http:
+          path: /history/{id}
+          method: get
 
   scheduler:
     handler: handler.hello
+    timeout: 180 # in seconds
     events:
       - schedule:
           # Invoke Lambda function Run at 06:30 am (UTC):12 AM IST every Monday through Saturday
@@ -113,6 +125,6 @@ functions:
           enabled: true
       - schedule:
           # Invoke Lambda function testing everyDay
-          rate: cron(15 4 * * ? *)
-          enabled: false
+          rate: cron(19 2 * * ? *)
+          enabled: true
 

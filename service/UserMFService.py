@@ -4,7 +4,7 @@ from service import MFService
 from datetime import datetime
 from domain import FundInfo, UserFund, ViewFund
 from botocore.exceptions import ClientError
-from boto3.dynamodb.conditions import And, Attr, Key
+from boto3.dynamodb.conditions import Attr, Key
 
 
 def view_update_user_mf_funds(user_id):
@@ -29,7 +29,8 @@ def transform_view_fund(fundList):
         for item in fundList:
             total_purchase_val += float(item.get_purchaseValue())
             total_profit += float(item.get_profitLoss())
-            total_percentile += float(item.get_percentile())
+
+        total_percentile = round( (total_profit / total_purchase_val) * 100, 4 )
 
         view_fund.set_totalInvestment(total_purchase_val)
         view_fund.set_totalProfit(round(total_profit, 4))

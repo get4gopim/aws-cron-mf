@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mutal Fund History</title>
+    <style>
+        table {
+          border: 1px solid white;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        th {
+          border: 1px solid white;
+          background-color: #96D4D4;
+        }
+        td {
+          border: 1px solid white;
+          background-color: #F0F0F0;
+        }
+        th, td {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+{% if view_history %}
+    {% if view_history.historyList %}
+        <h1>Mutal Fund History - {{ view_history.historyList[0]['mfName'] }}</h1>
+
+        <table>
+            <tr>
+                <th>As On</th>
+                <th>NAV</th>
+                <th>Last Updated</th>
+            </tr>
+            {% for row in view_history.historyList %}
+            <tr>
+                <td>{{ row.get_asOn() }}</td>
+                <td>{{ row.get_nav() }}</td>
+                <td>{{ row.get_lastUpdated() }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+{% else %}
+  <h1>No Fund History found !</h1>
+{% endif %}
+
+</body>
+</html>

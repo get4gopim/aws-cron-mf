@@ -4,8 +4,8 @@ import os
 import json
 
 from flask import jsonify, request
-from service import MFService, UserMFService, HtmlParser2
-from domain import FundInfo, UserFund
+from service import MFService, UserMFService, HtmlParser2, MFHistoryService
+from domain import FundInfo, UserFund, MFHistory
 from datetime import datetime
 
 from flask import render_template
@@ -36,6 +36,12 @@ def funds_update(user_id=None):
 def funds(user_id=None):
     view_fund = UserMFService.view_all_user_mf_funds(user_id)
     return render_template('funds.html', view_fund=view_fund)
+
+
+@app.route('/history/<id>')
+def history(id=None):
+    view_history = MFHistoryService.view_mf_history(id)
+    return render_template('history.html', view_history=view_history)
 # ------------------------------------------ Funds User API -------------------
 
 
@@ -180,6 +186,31 @@ def update_price(id):
     }
 
     return jsonify(response)
+
+
+@app.route('/api/v1/history', methods=['POST'])
+def api_funds_history():
+    LOGGER.info("api_mf_history_add: " + str(request))
+    LOGGER.info("request.json: " + str(request.json))
+
+    id = request.json.get('mfId')
+    asOn = request.json.get('asOn')
+
+    if not id or not asOn:
+        return jsonify({'error': 'Please provide id and asOn'}), 400
+
+    response = MFHistoryService.add_mf_nav_history(mf_history=MFHistory.MFHistory(id, asOn,
+                                                             request.json.get('nav'), datetime.now().__str__()))
+
+    return jsonify(response)
+
+
+@app.route('/api/v1/history/<id>', methods=['GET'])
+def api_get_fund_history(id):
+    print ('mf_id: ' + id)
+    f_list = MFHistoryService.get_funds_history(id)
+    serialized_list = [e.serialize() for e in f_list]
+    return jsonify(serialized_list)
 
 
 @app.route('/', methods=['GET'])
