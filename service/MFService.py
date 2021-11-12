@@ -24,6 +24,7 @@ def get_all_funds(dynamodb=None):
         if resp:
             print(resp)
             fund_info = FundInfo.FundInfo(resp['mf_id'], resp['mf_url'], '', '', '', '')
+            fund_info.set_category(resp['category'])
             print('getAll_funds: ' + fund_info.get_mfName())
             fundList.append(fund_info)
 
@@ -48,6 +49,7 @@ def find_all_funds(dynamodb=None):
         if resp:
             print(resp)
             fund_info = FundInfo.FundInfo(resp['mf_id'], resp['mf_url'], resp['mf_name'], resp['as_on'], resp['nav'], resp['last_updated'])
+            fund_info.set_category(resp['category'])
             print('getAll_funds: ' + fund_info.get_mfName())
             fundList.append(fund_info)
 
@@ -71,6 +73,7 @@ def get_fund(mfId, dynamodb=None):
             print(resp)
             fund_info = FundInfo.FundInfo(resp['mf_id'], resp['mf_url'], resp['mf_name'], resp['as_on'],
                                           resp['nav'], resp['last_updated'])
+            fund_info.set_category(resp['category'])
             print('get_fund: ' + fund_info.get_mfName())
 
         return fund_info
@@ -89,6 +92,7 @@ def add_fund(fundInfo, dynamodb=None):
         'as_on': fundInfo.get_asOn(),
         'mf_url': fundInfo.get_mfUrl(),
         'mf_name': fundInfo.get_mfName(),
+        'category': fundInfo.get_category(),
         'last_updated': fundInfo.get_lastUpdated(),
         'nav': fundInfo.get_nav()
     }
@@ -110,11 +114,12 @@ def update_fund(fundInfo, dynamodb=None):
         Key={
             'mf_id': fundInfo.get_mfId()
         },
-        UpdateExpression="set mf_name=:mfName, nav=:nav, as_on=:asOn, last_updated=:lastUpdated",
+        UpdateExpression="set mf_name=:mfName, nav=:nav, as_on=:asOn, category=:category last_updated=:lastUpdated",
         ExpressionAttributeValues={
             ':mfName': fundInfo.get_mfName(),
             ':nav': fundInfo.get_nav(),
             ':asOn': fundInfo.get_asOn(),
+            ':category': fundInfo.get_category(),
             ':lastUpdated': fundInfo.get_lastUpdated()
         },
         ReturnValues="UPDATED_NEW"

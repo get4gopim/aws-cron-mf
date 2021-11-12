@@ -5,7 +5,7 @@
     <title>Mutal Fund Report</title>
     <style>
         table {
-          border: 1px solid white;
+          border: 0px solid white;
           border-collapse: collapse;
           width: 100%;
         }
@@ -23,30 +23,60 @@
           padding-left: 10px;
           padding-right: 10px;
         }
+
     </style>
 </head>
 <body>
 
 {% if view_fund %}
 <h1>Mutal Fund Info</h1>
-    <table style="width: 70%;">
-        <tr>
-            <th style="width: 50%">Total Investment</th>
-            <td style="width: 50%">{{ view_fund['totalInvestment'] }}</td>
-        </tr>
-        <tr>
-            <th>Total Profit</th>
-            <td>{{ view_fund.get_totalProfit() }}</td>
-        </tr>
-        <tr>
-            <th>Overall Improvement %</th>
-            {% if (view_fund.get_totalPercentile() < 0) %}
-                <td style="color: red;">{{ view_fund.get_totalPercentile() }}</td>
-            {% else %}
-                <td style="color: blue;">{{ view_fund.get_totalPercentile() }} %</td>
-            {% endif %}
-        </tr>
-    </table>
+
+<table>
+    <tr>
+        <td valign="top">
+            <table>
+                <tr>
+                    <th style="width: 50%">Debt Fund Investment</th>
+                    <td style="width: 50%">{{ view_fund['totalInvestment'] }}</td>
+                </tr>
+                <tr>
+                    <th>Total Profit</th>
+                    <td>{{ view_fund.get_totalProfit() }}</td>
+                </tr>
+                <tr>
+                    <th>Overall Improvement %</th>
+                    {% if (view_fund.get_totalPercentile() < 0) %}
+                        <td style="color: red;">{{ view_fund.get_totalPercentile() }}</td>
+                    {% else %}
+                        <td style="color: blue;">{{ view_fund.get_totalPercentile() }} %</td>
+                    {% endif %}
+                </tr>
+            </table>
+        </td>
+
+        <td valign="top">
+            <table>
+                <tr>
+                    <th style="width: 50%">Equity Investment</th>
+                    <td style="width: 50%">{{ view_fund.get_eqInvestment() }}</td>
+                </tr>
+                <tr>
+                    <th>Total Profit</th>
+                    <td>{{ view_fund.get_eqProfit() }}</td>
+                </tr>
+                <tr>
+                    <th>Overall Improvement %</th>
+                    {% if (view_fund.get_eqPercentile() < 0) %}
+                        <td style="color: red;">{{ view_fund.get_eqPercentile() }}</td>
+                    {% else %}
+                        <td style="color: blue;">{{ view_fund.get_eqPercentile() }} %</td>
+                    {% endif %}
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+</table>
 
     <br />
     <br />
@@ -64,9 +94,9 @@
             </tr>
             {% for row in view_fund.fundList %}
             <tr>
-                <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_mfId() }}">{{ row['mfName'] }}</a></td>
-                <td>{{ row.get_nav() }}</td>
-                <td>{{ row.get_asOn() }}</td>
+                <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_mfId() }}">{{ row.get_fundInfo().get_mfName() }}</a></td>
+                <td>{{ row.get_fundInfo().get_nav() }}</td>
+                <td>{{ row.get_fundInfo().get_asOn() }}</td>
                 <td>{{ row.get_purchaseValue() }}</td>
                 <td>{{ row.get_profitLoss() }}</td>
 
@@ -81,6 +111,7 @@
             {% endfor %}
         </table>
     {% endif %}
+
 
 {% else %}
   <h1>No Fund info found !</h1>

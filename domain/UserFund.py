@@ -16,9 +16,10 @@ class UserFund:
         self.__dateCreated = dateCreated
         self.__dateModified = dateModified
         self.error = None
-        self.mfName = ''
-        self.nav = ''
-        self.asOn = ''
+        self.fundInfo = None
+        # self.mfName = ''
+        # self.nav = ''
+        # self.asOn = ''
         self.percentile = ''
         self.noOfDays = 0
 
@@ -61,23 +62,23 @@ class UserFund:
     def get_dateModified(self):
         return self.__dateModified
 
-    def set_mfName(self, mfName):
-        self.mfName = mfName
-
-    def get_mfName(self):
-        return self.mfName
-
-    def set_nav(self, nav):
-        self.nav = nav
-
-    def get_nav(self):
-        return self.nav
-
-    def set_asOn(self, asOn):
-        self.asOn = asOn
-
-    def get_asOn(self):
-        return self.asOn
+    # def set_mfName(self, mfName):
+    #     self.mfName = mfName
+    #
+    # def get_mfName(self):
+    #     return self.mfName
+    #
+    # def set_nav(self, nav):
+    #     self.nav = nav
+    #
+    # def get_nav(self):
+    #     return self.nav
+    #
+    # def set_asOn(self, asOn):
+    #     self.asOn = asOn
+    #
+    # def get_asOn(self):
+    #     return self.asOn
 
     def set_noOfDays(self, noOfDays):
         self.noOfDays = noOfDays
@@ -90,6 +91,12 @@ class UserFund:
 
     def get_percentile(self):
         return self.percentile
+
+    def set_fundInfo(self, fundInfo):
+        self.fundInfo = fundInfo
+
+    def get_fundInfo(self):
+        return self.fundInfo
 
 
     def __str__(self):

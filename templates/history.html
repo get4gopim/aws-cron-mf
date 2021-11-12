@@ -39,11 +39,17 @@
             </tr>
             <tr>
                 <th>Purchase Nav</th>
-                <td>{{ view_history.userFund.get_purchaseNav() }}</td>
+                <td>{{ view_history.userFund.get_purchaseNav() }}
+                    {% if (view_history.get_navDiff() < 0) %}
+                        <span style="color:red">( {{ view_history.get_navDiff() }} changed since )</span>
+                    {% else %}
+                        <span style="color:blue">( {{ view_history.get_navDiff() }} changed since )</span>
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th style="width: 50%">Purchase Value</th>
-                <td style="width: 50%">{{ view_history.userFund.get_purchaseValue() }}</td>
+                <td style="width: 50%">{{ view_history.userFund.get_purchaseValue() }}   <span style="color:blue">( {{ view_history.userFund.get_actualValue() }} ** )</span></td>
             </tr>
             <tr>
                 <th>Units</th>
@@ -66,12 +72,14 @@
                 {% endif %}
             </tr>
             <tr>
-                <th>Last Updated</th>
-                <td>{{ view_history.userFund.get_dateModified() }}</td>
+                <th>Last Updated Nav</th>
+                <td>{{ view_history.userFund.fundInfo.get_lastUpdated() }}</td>
             </tr>
         </table>
     {% endif %}
 
+    <br />
+    ** Stamp Duty : <span style="color:blue">( {{ view_history.userFund.get_stampPercent() }} % )</span>
     <br />
     <br />
 

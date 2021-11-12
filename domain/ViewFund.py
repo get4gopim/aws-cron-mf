@@ -8,6 +8,9 @@ class ViewFund:
         self.totalInvestment = 0
         self.totalProfit = 0
         self.totalPercentile = 0
+        self.eqInvestment = 0
+        self.eqProfit = 0
+        self.eqPercentile = 0
 
     def get_fundList(self):
         return self.fundList
@@ -32,6 +35,26 @@ class ViewFund:
 
     def set_totalPercentile(self, totalPercentile):
         self.totalPercentile = totalPercentile
+
+    # ----------
+
+    def get_eqInvestment(self):
+        return self.eqInvestment
+
+    def set_eqInvestment(self, eqInvestment):
+        self.eqInvestment = eqInvestment
+
+    def get_eqProfit(self):
+        return self.eqProfit
+
+    def set_eqProfit(self, eqProfit):
+        self.eqProfit = eqProfit
+
+    def get_eqPercentile(self):
+        return self.eqPercentile
+
+    def set_eqPercentile(self, eqPercentile):
+        self.eqPercentile = eqPercentile
 
     def __str__(self):
         return "UserFund: [totalInvestment: " + str(self.totalInvestment) + ", totalProfit: " + str(self.totalProfit) \

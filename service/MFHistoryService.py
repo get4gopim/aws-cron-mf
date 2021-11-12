@@ -71,6 +71,10 @@ def transform_view_history(historyList, user_fund_list):
     view_history.set_historyList(historyList)
     if user_fund_list:
         user_fund = user_fund_list[0]
+        fund_info = user_fund.get_fundInfo()
         view_history.set_userFund(user_fund)
+
+        nav_diff = round(float(fund_info.get_nav()) - float(user_fund.get_purchaseNav()), 4)
+        view_history.set_navDiff(nav_diff)
 
     return view_history

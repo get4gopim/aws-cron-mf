@@ -9,6 +9,7 @@ class FundInfo:
         self.__mfUrl = mfUrl
         self.__asOn = asOn
         self.__nav = nav
+        self.category = ''
         self.__lastUpdated = lastUpdated
         self.error = None
 
@@ -33,6 +34,12 @@ class FundInfo:
     def get_nav(self):
         return self.__nav
 
+    def get_category(self):
+        return self.category
+
+    def set_category(self, category):
+        self.category = category
+
     def get_lastUpdated(self):
         return self.__lastUpdated
 
@@ -45,6 +52,7 @@ class FundInfo:
             "mfUrl": self.__mfUrl,
             "mfName": self.__mfName,
             "asOn": self.__asOn,
+            "category": self.category,
             "nav": self.__nav,
             "lastUpdated": self.__lastUpdated
         }

@@ -25,17 +25,27 @@ def transform_view_fund(fundList):
     if fundList:
         total_purchase_val = 0
         total_profit = 0
-        total_percentile = 0
+        eq_total_purchase_val = 0
+        eq_total_profit = 0
 
         for item in fundList:
-            total_purchase_val += float(item.get_purchaseValue())
-            total_profit += float(item.get_profitLoss())
+            if item.get_fundInfo().get_category() == "debt":
+                total_purchase_val += float(item.get_purchaseValue())
+                total_profit += float(item.get_profitLoss())
+            elif item.get_fundInfo().get_category() == "equity":
+                eq_total_purchase_val += float(item.get_purchaseValue())
+                eq_total_profit += float(item.get_profitLoss())
 
         total_percentile = round( (total_profit / total_purchase_val) * 100, 4 )
+        eq_total_percentile = round((eq_total_profit / eq_total_purchase_val) * 100, 4)
 
         view_fund.set_totalInvestment(total_purchase_val)
         view_fund.set_totalProfit(round(total_profit, 4))
         view_fund.set_totalPercentile(total_percentile)
+
+        view_fund.set_eqInvestment(eq_total_purchase_val)
+        view_fund.set_eqProfit(eq_total_profit)
+        view_fund.set_eqPercentile(eq_total_percentile)
 
     return view_fund
 
@@ -135,9 +145,10 @@ def set_additional_fields(user_fund_info, fund_info):
         except BaseException as ex:
             print (f'Unable to calculate percentile : {fund_info.get_mfName()} :: {user_fund_info.get_profitLoss()} exception:: {repr(ex)}')
 
-        user_fund_info.set_nav(fund_info.get_nav())
-        user_fund_info.set_mfName(fund_info.get_mfName())
-        user_fund_info.set_asOn(fund_info.get_asOn())
+        user_fund_info.set_fundInfo(fund_info)
+        #user_fund_info.set_nav(fund_info.get_nav())
+        #user_fund_info.set_mfName(fund_info.get_mfName())
+        #user_fund_info.set_asOn(fund_info.get_asOn())
         user_fund_info.set_percentile(percentile)
         user_fund_info.set_noOfDays( find_between_days(fund_info.get_asOn(), user_fund_info.get_dateCreated()) )
     else:
