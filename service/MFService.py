@@ -114,7 +114,7 @@ def update_fund(fundInfo, dynamodb=None):
         Key={
             'mf_id': fundInfo.get_mfId()
         },
-        UpdateExpression="set mf_name=:mfName, nav=:nav, as_on=:asOn, category=:category last_updated=:lastUpdated",
+        UpdateExpression="set mf_name=:mfName, nav=:nav, as_on=:asOn, category=:category, last_updated=:lastUpdated",
         ExpressionAttributeValues={
             ':mfName': fundInfo.get_mfName(),
             ':nav': fundInfo.get_nav(),

@@ -15,6 +15,8 @@ def hello(event, context):
         fund_url = fund_info.get_mfUrl()
         info = HtmlParser2.call_fund_api(fund_url)
         mf = FundInfo.FundInfo(fund_info.get_mfId(), fund_info.get_mfUrl(), info.get_mfName(), info.get_asOn(), info.get_nav(), datetime.now().__str__())
+
+        mf.set_category(fund_info.get_category())
         MFService.update_fund(mf)
 
         try:

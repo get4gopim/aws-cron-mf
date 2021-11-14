@@ -26,7 +26,7 @@ custom:
 
 provider:
   name: aws
-  runtime: python3.9
+  runtime: python3.8
   lambdaHashingVersion: 20201221
   stage: dev
   region: ap-south-1
@@ -125,8 +125,8 @@ functions:
           enabled: true
       - schedule:
           # Invoke Lambda function testing everyDay
-          rate: cron(19 2 * * ? *)
-          enabled: false
+          rate: cron(5 14 * * ? *)
+          enabled: true
 
   user_fund_scheduler:
     handler: handler.update_user_fund
@@ -154,5 +154,5 @@ functions:
           enabled: true
       - schedule:
           # Invoke Lambda function testing everyDay
-          rate: cron(25 11 * * ? *)
-          enabled: false
+          rate: cron(40 14 * * ? *)
+          enabled: true

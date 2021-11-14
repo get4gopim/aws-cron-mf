@@ -118,9 +118,9 @@ class UserFund:
             "units": str(self.__units),
             "latestValue": str(self.__latestValue),
             "profitLoss": str(self.get_profitLoss()),
-            "mfName": str(self.get_mfName()),
-            "nav": str(self.get_nav()),
-            "asOn": str(self.get_asOn()),
+            "mfName": str(self.get_fundInfo().get_mfName()),
+            "nav": str(self.get_fundInfo().get_nav()),
+            "asOn": str(self.get_fundInfo().get_asOn()),
             "percentile": str(self.get_percentile()),
             "dateCreated": self.__dateCreated,
             "dateModified": self.__dateModified

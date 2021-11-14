@@ -177,6 +177,8 @@ def update_price(id):
     mf = FundInfo.FundInfo(fund_info.get_mfId(), fund_info.get_mfUrl(), info.get_mfName(), info.get_asOn(),
                            info.get_nav(), datetime.now().__str__())
 
+    mf.set_category(fund_info.get_category())
+
     response = MFService.update_fund(mf)
     print(response)
 
