@@ -46,7 +46,7 @@
                 <tr>
                     <th>Overall Improvement %</th>
                     {% if (view_fund.get_totalPercentile() < 0) %}
-                        <td style="color: red;">{{ view_fund.get_totalPercentile() }}</td>
+                        <td style="color: red;">{{ view_fund.get_totalPercentile() }} %</td>
                     {% else %}
                         <td style="color: blue;">{{ view_fund.get_totalPercentile() }} %</td>
                     {% endif %}
@@ -57,7 +57,7 @@
         <td valign="top">
             <table>
                 <tr>
-                    <th style="width: 50%">Equity Investment</th>
+                    <th style="width: 50%">Equity Fund Investment</th>
                     <td style="width: 50%">{{ view_fund.get_eqInvestment() }}</td>
                 </tr>
                 <tr>
@@ -67,7 +67,7 @@
                 <tr>
                     <th>Overall Improvement %</th>
                     {% if (view_fund.get_eqPercentile() < 0) %}
-                        <td style="color: red;">{{ view_fund.get_eqPercentile() }}</td>
+                        <td style="color: red;">{{ view_fund.get_eqPercentile() }} %</td>
                     {% else %}
                         <td style="color: blue;">{{ view_fund.get_eqPercentile() }} %</td>
                     {% endif %}

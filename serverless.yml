@@ -26,7 +26,7 @@ custom:
 
 provider:
   name: aws
-  runtime: python3.8
+  runtime: python3.9
   lambdaHashingVersion: 20201221
   stage: dev
   region: ap-south-1
@@ -37,7 +37,7 @@ provider:
 
 
 functions:
-  app:
+  funds_api:
     handler: wsgi_handler.handler
     timeout: 30 # in seconds
     events:
@@ -63,6 +63,10 @@ functions:
           path: /api/v1/funds/update/nav/{id}
           method: get
 
+  user_api:
+    handler: wsgi_handler.handler
+    timeout: 30 # in seconds
+    events:
       - http:
           path: /api/v1/user/{user_id}/funds
           method: get
@@ -83,6 +87,10 @@ functions:
           path: /api/v1/history/{id}
           method: get
 
+  web:
+    handler: wsgi_handler.handler
+    timeout: 30 # in seconds
+    events:
       - http:
           path: /hello
           method: get
@@ -99,7 +107,7 @@ functions:
           path: /funds/{user_id}/history/{mf_id}
           method: get
 
-  scheduler:
+  fund_update_scheduler:
     handler: handler.hello
     timeout: 180 # in seconds
     events:
