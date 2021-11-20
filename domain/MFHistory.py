@@ -8,6 +8,7 @@ class MFHistory:
         self.__lastUpdated = lastUpdated
         self.error = None
         self.mfName = ''
+        self.asOnValue = 0
 
     def get_error(self):
         return self.error
@@ -32,6 +33,12 @@ class MFHistory:
 
     def get_mfName(self):
         return self.mfName
+
+    def set_asOnValue(self, asOnValue):
+        self.asOnValue = asOnValue
+
+    def get_asOnValue(self):
+        return self.asOnValue
 
     def __str__(self):
         return "FundInfo: [id: " + str(self.__mfId) + ", nav: " + str(self.__nav) + ", asOn: " + str(self.__asOn) + ", lastUpdated: " + str(self.__lastUpdated) + "]"

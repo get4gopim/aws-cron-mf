@@ -89,12 +89,14 @@
             <tr>
                 <th>As On</th>
                 <th>NAV</th>
+                <th>Value AsOn</th>
                 <th>Last Updated</th>
             </tr>
             {% for row in view_history.historyList %}
             <tr>
                 <td>{{ row.get_asOn() }}</td>
                 <td>{{ row.get_nav() }}</td>
+                <td>{{ row.get_asOnValue() }}</td>
                 <td>{{ row.get_lastUpdated() }}</td>
             </tr>
             {% endfor %}
