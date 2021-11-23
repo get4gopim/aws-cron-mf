@@ -65,10 +65,10 @@ def get_fund(mfId, dynamodb=None):
     try:
         response = table.get_item(Key={'mf_id': mfId})
         print (response)
-    except ClientError as e:
-        print(e.response['Error']['Message'])
-    else:
         resp = response['Item']
+    except ClientError as e:
+        print('Item not found' + e.response['Error']['Message'])
+    else:
         if resp:
             print(resp)
             fund_info = FundInfo.FundInfo(resp['mf_id'], resp['mf_url'], resp['mf_name'], resp['as_on'],

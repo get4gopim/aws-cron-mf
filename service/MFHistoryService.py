@@ -70,6 +70,12 @@ def get_funds_history(mf_id, user_fund, dynamodb=None):
 def view_mf_history(user_id, mf_id):
     user_fund_list = UserMFService.get_user_and_fund_by_id(user_id, mf_id)
     user_fund = user_fund_list[0]
+
+    mf_id_list = mf_id.split("#")
+    mf_id = mf_id_list[0]
+    if len(mf_id_list) > 1:
+        mf_purchase_date = mf_id_list[1]
+
     historyList = get_funds_history(mf_id, user_fund, None)
     return transform_view_history(historyList, user_fund_list)
 

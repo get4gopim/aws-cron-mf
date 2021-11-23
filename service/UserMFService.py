@@ -27,17 +27,25 @@ def transform_view_fund(fundList):
         total_profit = 0
         eq_total_purchase_val = 0
         eq_total_profit = 0
+        total_percentile = 0
+        eq_total_percentile = 0
 
-        for item in fundList:
-            if item.get_fundInfo().get_category() == "debt":
-                total_purchase_val += float(item.get_purchaseValue())
-                total_profit += float(item.get_profitLoss())
-            elif item.get_fundInfo().get_category() == "equity":
-                eq_total_purchase_val += float(item.get_purchaseValue())
-                eq_total_profit += float(item.get_profitLoss())
+        try:
+            for item in fundList:
+                if item.get_fundInfo().get_category() == "debt":
+                    total_purchase_val += float(item.get_purchaseValue())
+                    total_profit += float(item.get_profitLoss())
+                elif item.get_fundInfo().get_category() == "equity":
+                    eq_total_purchase_val += float(item.get_purchaseValue())
+                    eq_total_profit += float(item.get_profitLoss())
+        except BaseException as ex:
+            print (f'Unable to calculate percentile : {item.get_fundInfo().get_mfName()} exception:: {repr(ex)}')
 
-        total_percentile = round( (total_profit / total_purchase_val) * 100, 4 )
-        eq_total_percentile = round((eq_total_profit / eq_total_purchase_val) * 100, 4)
+        if total_purchase_val != 0:
+            total_percentile = round( (total_profit / total_purchase_val) * 100, 4 )
+
+        if eq_total_purchase_val != 0:
+            eq_total_percentile = round((eq_total_profit / eq_total_purchase_val) * 100, 4)
 
         view_fund.set_totalInvestment(total_purchase_val)
         view_fund.set_totalProfit(round(total_profit, 4))
@@ -81,7 +89,10 @@ def update_mf(user_fund_det):
     user_fund_info = None
 
     if user_fund_det:
-        fund_info = MFService.get_fund( user_fund_det.get_mfId() )
+        mf_id_list = user_fund_det.get_mfId().split("#")
+        mf_id = mf_id_list[0]
+
+        fund_info = MFService.get_fund( mf_id )
 
         purchase_val = float(user_fund_det.get_purchaseValue())
         stamp_value = purchase_val * (float(user_fund_det.get_stampPercent()) / 100)
@@ -123,7 +134,13 @@ def get_all_user_funds(user_id, dynamodb=None):
     for resp in data:
         if resp:
             print(resp)
-            fund_info = MFService.get_fund(resp['mf_id'])
+            mf_id_list = resp['mf_id'].split("#")
+            mf_id = mf_id_list[0]
+
+            if len(mf_id_list) > 1:
+                mf_purchase_date = mf_id_list[1]
+
+            fund_info = MFService.get_fund(mf_id)
             user_fund_info = UserFund.UserFund(resp['user_id'], resp['mf_id'], resp['purchase_value'], resp['purchase_nav'],
                                           resp['stamp_percent'], resp['actual_value'], resp['units'], resp['latest_value'], resp['profit_loss'],
                                           resp['date_created'], resp['date_modified'])
@@ -182,7 +199,7 @@ def get_user_and_fund_by_id(user_id, mf_id, dynamodb=None):
 
     response = table.query(
         TableName=TABLE_NAME,
-        KeyConditionExpression='user_id = :pkVal AND begins_with ( mf_id , :skVal )',
+        KeyConditionExpression='user_id = :pkVal AND begins_with ( mf_id, :skVal )',
         ExpressionAttributeValues=exp_attributes
     )
     print (str(response))
@@ -196,7 +213,11 @@ def get_user_and_fund_by_id(user_id, mf_id, dynamodb=None):
     for resp in data:
         if resp:
             print(resp)
-            fund_info = MFService.get_fund(resp['mf_id'])
+
+            mf_id_list = resp['mf_id'].split("#")
+            mf_id = mf_id_list[0]
+
+            fund_info = MFService.get_fund(mf_id)
             user_fund_info = UserFund.UserFund(resp['user_id'], resp['mf_id'], resp['purchase_value'],
                                                resp['purchase_nav'],
                                                resp['stamp_percent'], resp['actual_value'], resp['units'],
@@ -217,9 +238,11 @@ def add_user_id_and_fund(user_fund_info, dynamodb=None):
 
     print(str(user_fund_info))
 
+    mf_id = user_fund_info.get_mfId() + "#" + user_fund_info.get_dateCreated()
+
     item = {
         'user_id': user_fund_info.get_userId(),
-        'mf_id': user_fund_info.get_mfId(),
+        'mf_id': mf_id,
         'purchase_value': user_fund_info.get_purchaseValue(),
         'purchase_nav': user_fund_info.get_purchaseNav(),
         'stamp_percent': user_fund_info.get_stampPercent(),

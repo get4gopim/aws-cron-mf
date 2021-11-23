@@ -104,7 +104,7 @@ functions:
           path: /funds/{user_id}/update
           method: get
       - http:
-          path: /funds/{user_id}/history/{mf_id}
+          path: /funds/{user_id}/history/{mf_id}/date/{purchase_date}
           method: get
 
   fund_update_scheduler:

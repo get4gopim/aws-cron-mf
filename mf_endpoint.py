@@ -38,8 +38,14 @@ def funds(user_id=None):
     return render_template('funds.html', view_fund=view_fund)
 
 
-@app.route('/funds/<user_id>/history/<mf_id>')
-def history(user_id=None, mf_id=None):
+@app.route('/funds/<user_id>/history/<mf_id>/date/<purchase_date>')
+def history_multiple(user_id=None, mf_id=None, purchase_date=None):
+    print ('mf_id :: ' + mf_id + ' purchase_date :: ' + purchase_date)
+
+    if purchase_date is not None:
+        mf_id = mf_id + "#" + purchase_date
+        print('altered mf_id :: ' + mf_id)
+
     view_history = MFHistoryService.view_mf_history(user_id, mf_id)
     return render_template('history.html', view_history=view_history)
 # ------------------------------------------ Funds User API -------------------
@@ -78,9 +84,10 @@ def api_user_add_fund(user_id):
 
     userId = request.json.get('userId')
     mfId = request.json.get('mfId')
+    dateCreated = request.json.get('dateCreated')
 
-    if not userId or not mfId:
-        return jsonify({'error': 'Please provide userId and mfId'}), 400
+    if not userId or not mfId or not dateCreated:
+        return jsonify({'error': 'Please provide userId, mfId and dateCreated'}), 400
 
     response = UserMFService.add_user_id_and_fund(user_fund_info=UserFund.UserFund(userId, mfId, request.json.get('purchaseValue'), request.json.get('purchaseNav'),
                             request.json.get('stampPercent'), request.json.get('actualValue'), request.json.get('units'), request.json.get('latestValue'),
