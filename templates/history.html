@@ -72,6 +72,10 @@
                 {% endif %}
             </tr>
             <tr>
+                <th>Type</th>
+                <td>{{ view_history.userFund.get_type() }}</td>
+            </tr>
+            <tr>
                 <th>Last Updated Nav</th>
                 <td>{{ view_history.userFund.fundInfo.get_lastUpdated() }}</td>
             </tr>

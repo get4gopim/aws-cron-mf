@@ -104,6 +104,9 @@ functions:
           path: /funds/{user_id}/update
           method: get
       - http:
+          path: /funds/{user_id}/history/{mf_id}/sip
+          method: get
+      - http:
           path: /funds/{user_id}/history/{mf_id}/date/{purchase_date}
           method: get
 

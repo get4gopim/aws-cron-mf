@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mutal Fund Report - SIP</title>
+    <style>
+        table {
+          border: 0px solid white;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        th {
+          border: 1px solid white;
+          background-color: #96D4D4;
+        }
+        td {
+          border: 1px solid white;
+          background-color: #F0F0F0;
+        }
+        th, td {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+{% if view_fund %}
+    {% if view_fund.fundList %}
+        <h1>SIP - {{ view_fund.fundList[0].get_fundInfo().get_mfName() }}</h1>
+
+        <table>
+            <tr>
+                <th>Purchase Date</th>
+                <th>Purchase Nav</th>
+                <th>NAV</th>
+                <th>As On</th>
+                <th>Purchase Value</th>
+                <th>Profit/Loss</th>
+                <th>Percentage</th>
+                <th>Last Updated</th>
+            </tr>
+            {% for row in view_fund.fundList %}
+            <tr>
+                <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_fundInfo().get_mfId() }}/date/{{ row.get_dateCreated() }}">{{ row.get_dateCreated() }}</a></td>
+                <td>{{ row.get_purchaseNav() }}</td>
+                <td>{{ row.get_fundInfo().get_nav() }}</td>
+                <td>{{ row.get_fundInfo().get_asOn() }}</td>
+                <td>{{ row.get_purchaseValue() }}</td>
+                <td>{{ row.get_profitLoss() }}</td>
+
+                {% if (row.get_percentile() < 0) %}
+                    <td style="color: red;">{{ row.get_percentile() }} %</td>
+                {% else %}
+                    <td style="color: blue;">{{ row.get_percentile() }} %</td>
+                {% endif %}
+
+                <td>{{ row.get_dateModified() }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+
+{% else %}
+  <h1>No Fund info found !</h1>
+{% endif %}
+
+</body>
+</html>

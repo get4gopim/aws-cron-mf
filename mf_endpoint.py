@@ -46,8 +46,15 @@ def history_multiple(user_id=None, mf_id=None, purchase_date=None):
         mf_id = mf_id + "#" + purchase_date
         print('altered mf_id :: ' + mf_id)
 
-    view_history = MFHistoryService.view_mf_history(user_id, mf_id)
+    view_history = MFHistoryService.view_mf_history(user_id, mf_id, purchase_date)
     return render_template('history.html', view_history=view_history)
+
+
+@app.route('/funds/<user_id>/history/<mf_id>/sip')
+def funds_sip(user_id=None, mf_id=None):
+    print('mf_id :: ' + mf_id + ' user_id :: ' + user_id)
+    view_fund = UserMFService.view_sip_user_mf_funds(user_id, mf_id)
+    return render_template('funds_sip.html', view_fund=view_fund)
 # ------------------------------------------ Funds User API -------------------
 
 

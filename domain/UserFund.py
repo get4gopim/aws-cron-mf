@@ -15,6 +15,7 @@ class UserFund:
         self.__profitLoss = profitLoss
         self.__dateCreated = dateCreated
         self.__dateModified = dateModified
+        self.type = ''
         self.error = None
         self.fundInfo = None
         # self.mfName = ''
@@ -29,6 +30,12 @@ class UserFund:
     def set_error(self, error):
         self.error = error
 
+    def get_type(self):
+        return self.type
+
+    def set_type(self, type):
+        self.type = type.upper()
+
     def get_userId(self):
         return self.__userId
 
@@ -37,6 +44,9 @@ class UserFund:
 
     def get_purchaseValue(self):
         return self.__purchaseValue
+
+    def set_purchaseValue(self, purchaseValue):
+        self.__purchaseValue = purchaseValue
 
     def get_purchaseNav(self):
         return self.__purchaseNav
@@ -50,11 +60,17 @@ class UserFund:
     def get_units(self):
         return self.__units
 
+    def set_units(self, units):
+        self.__units = units
+
     def get_latestValue(self):
         return self.__latestValue
 
     def get_profitLoss(self):
         return self.__profitLoss
+
+    def set_profitLoss(self, profitLoss):
+        self.__profitLoss = profitLoss
 
     def get_dateCreated(self):
         return self.__dateCreated
@@ -122,6 +138,7 @@ class UserFund:
             "nav": str(self.get_fundInfo().get_nav()),
             "asOn": str(self.get_fundInfo().get_asOn()),
             "percentile": str(self.get_percentile()),
+            "type": str(self.get_type()),
             "dateCreated": self.__dateCreated,
             "dateModified": self.__dateModified
         }

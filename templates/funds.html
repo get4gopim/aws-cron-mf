@@ -94,10 +94,15 @@
             </tr>
             {% for row in view_fund.fundList %}
             <tr>
-                <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_fundInfo().get_mfId() }}/date/{{ row.get_dateCreated() }}">{{ row.get_fundInfo().get_mfName() }}</a></td>
+                {% if row.get_type() == 'SIP' %}
+                    <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_fundInfo().get_mfId() }}/sip">{{ row.get_fundInfo().get_mfName() }} (SIP)</a></td>
+                {% else %}
+                    <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_fundInfo().get_mfId() }}/date/{{ row.get_dateCreated() }}">{{ row.get_fundInfo().get_mfName() }}</a></td>
+                {% endif %}
+
                 <td>{{ row.get_fundInfo().get_nav() }}</td>
                 <td>{{ row.get_fundInfo().get_asOn() }}</td>
-                <td>{{ row.get_purchaseValue() }}  ({{ row.get_dateCreated() }})</td>
+                <td>{{ row.get_purchaseValue() }}</td>
                 <td>{{ row.get_profitLoss() }}</td>
 
                 {% if (row.get_percentile() < 0) %}
