@@ -29,7 +29,7 @@
 
 {% if view_history %}
 
-<h1>{{ view_history.historyList[0]['mfName'] }}</h1>
+<h1>{{ view_history.userFund.get_fundInfo().get_mfName() }}</h1>
 
     {% if view_history.userFund %}
         <table style="width: 70%;">

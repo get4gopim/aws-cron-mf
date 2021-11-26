@@ -30,15 +30,39 @@
 
 {% if view_fund %}
     {% if view_fund.fundList %}
-        <h1>SIP - {{ view_fund.fundList[0].get_fundInfo().get_mfName() }}</h1>
+        <h1>Mutal Fund</h1>
+
+<table style="width: 70%;">
+
+    <tr>
+        <th style="width: 50%">MF Name</th>
+        <td style="width: 50%">{{ view_fund.fundList[0].get_fundInfo().get_mfName() }}</td>
+    </tr>
+    <tr>
+        <th>Current Nav</th>
+        <td>{{ view_fund.fundList[0].get_fundInfo().get_nav() }}</td>
+    </tr>
+    <tr>
+        <th>As On</th>
+        <td>{{ view_fund.fundList[0].get_fundInfo().get_asOn() }}</td>
+    </tr>
+    <!--<tr>
+        <th>Type</th>
+        <td>{{ view_fund.fundList[0].get_type() }}</td>
+    </tr>-->
+
+</table>
+
+    <br />
+    <br />
 
         <table>
             <tr>
                 <th>Purchase Date</th>
                 <th>Purchase Nav</th>
-                <th>NAV</th>
-                <th>As On</th>
                 <th>Purchase Value</th>
+                <th>Units</th>
+                <th>Type</th>
                 <th>Profit/Loss</th>
                 <th>Percentage</th>
                 <th>Last Updated</th>
@@ -47,9 +71,9 @@
             <tr>
                 <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_fundInfo().get_mfId() }}/date/{{ row.get_dateCreated() }}">{{ row.get_dateCreated() }}</a></td>
                 <td>{{ row.get_purchaseNav() }}</td>
-                <td>{{ row.get_fundInfo().get_nav() }}</td>
-                <td>{{ row.get_fundInfo().get_asOn() }}</td>
                 <td>{{ row.get_purchaseValue() }}</td>
+                <td>{{ row.get_units() }}</td>
+                <td>{{ row.get_type() }}</td>
                 <td>{{ row.get_profitLoss() }}</td>
 
                 {% if (row.get_percentile() < 0) %}

@@ -96,9 +96,14 @@ def api_user_add_fund(user_id):
     if not userId or not mfId or not dateCreated:
         return jsonify({'error': 'Please provide userId, mfId and dateCreated'}), 400
 
-    response = UserMFService.add_user_id_and_fund(user_fund_info=UserFund.UserFund(userId, mfId, request.json.get('purchaseValue'), request.json.get('purchaseNav'),
-                            request.json.get('stampPercent'), request.json.get('actualValue'), request.json.get('units'), request.json.get('latestValue'),
-                            request.json.get('profitLoss'), request.json.get('dateCreated'), datetime.now().__str__() ) )
+    user_fund_info = UserFund.UserFund(userId, mfId, request.json.get('purchaseValue'), request.json.get('purchaseNav'),
+                                       request.json.get('stampPercent'), request.json.get('actualValue'),
+                                       request.json.get('units'), request.json.get('latestValue'),
+                                       request.json.get('profitLoss'), request.json.get('dateCreated'),
+                                       datetime.now().__str__())
+    user_fund_info.set_type(request.json.get('type'))
+
+    response = UserMFService.add_user_id_and_fund(user_fund_info)
 
     return jsonify(response)
 
@@ -122,13 +127,17 @@ def api_add_fund():
 
     id = request.json.get('mfId')
     fund_url = request.json.get('mfUrl')
+    category = request.json.get('category')
 
     if not id or not fund_url:
         return jsonify({'error': 'Please provide id and url'}), 400
 
     info = HtmlParser2.call_fund_api(fund_url)
-    response = MFService.add_fund(fundInfo=FundInfo.FundInfo(id, fund_url, info.get_mfName(), info.get_asOn(),
-                               info.get_nav(), datetime.now().__str__()) )
+    fundInfo = FundInfo.FundInfo(id, fund_url, info.get_mfName(), info.get_asOn(),
+                                 info.get_nav(), datetime.now().__str__())
+    fundInfo.set_category(category)
+
+    response = MFService.add_fund(fundInfo)
 
     return jsonify(response)
 
@@ -141,11 +150,15 @@ def api_update_fund():
 
     id = request.json.get('mfId')
     fund_url = request.json.get('mfUrl')
+    category = request.json.get('category')
 
     if not id or not fund_url:
         return jsonify({'error': 'Please provide id and url'}), 400
 
     info = HtmlParser2.call_fund_api(fund_url)
+    fundInfo = FundInfo.FundInfo(id, fund_url, info.get_mfName(), info.get_asOn(),
+                                 info.get_nav(), datetime.now().__str__())
+    fundInfo.set_category(category)
     response = MFService.update_fund(fundInfo=FundInfo.FundInfo(id, fund_url, info.get_mfName(), info.get_asOn(),
                                                              info.get_nav(), datetime.now().__str__()))
 

@@ -112,7 +112,7 @@ functions:
 
   fund_update_scheduler:
     handler: handler.hello
-    timeout: 180 # in seconds
+    timeout: 900 # in seconds
     events:
       - schedule:
           # Invoke Lambda function Run at 06:30 am (UTC):12 AM IST every Monday through Saturday

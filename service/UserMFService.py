@@ -42,7 +42,7 @@ def reduce_user_mf_funds(user_id):
             pur_val = int(old_fund.get_purchaseValue()) + int(user_fund.get_purchaseValue())
             user_fund.set_purchaseValue(pur_val)
 
-            profit_loss = round(float(old_fund.get_profitLoss()) + float(user_fund.get_profitLoss()), 4)
+            profit_loss = round( (float(old_fund.get_profitLoss()) + float(user_fund.get_profitLoss()) ), 4)
             user_fund.set_profitLoss(profit_loss)
 
             user_dict[mf_id] = user_fund
@@ -243,7 +243,8 @@ def get_user_and_fund_by_id(user_id, mf_id, dynamodb=None):
     response = table.query(
         TableName=TABLE_NAME,
         KeyConditionExpression='user_id = :pkVal AND begins_with ( mf_id, :skVal )',
-        ExpressionAttributeValues=exp_attributes
+        ExpressionAttributeValues=exp_attributes,
+        ScanIndexForward=False,
     )
     print (str(response))
     data = response['Items']
