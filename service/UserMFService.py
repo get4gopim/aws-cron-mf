@@ -49,8 +49,6 @@ def reduce_user_mf_funds(user_id):
         else: # Add Element
             user_dict[mf_id] = user_fund
 
-    print("Updated Dict is: ", user_dict)
-
     for key, value in user_dict.items():
         fund_list.append(value)
 

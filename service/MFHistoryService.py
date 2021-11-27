@@ -29,7 +29,7 @@ def add_mf_nav_history(mf_history, dynamodb=None):
     return response
 
 
-def get_funds_history(mf_id, user_fund, purchase_date, dynamodb=None):
+def get_funds_history(mf_id, user_fund=None, purchase_date=None, dynamodb=None):
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
 
@@ -57,10 +57,9 @@ def get_funds_history(mf_id, user_fund, purchase_date, dynamodb=None):
             mf_history = MFHistory.MFHistory(resp['mf_id'], resp['as_on'], resp['nav'], resp['date_modified'])
             mf_history.set_mfName(mf_fund.get_mfName())
 
-            user_fund.get_units()
-
-            as_on_value = round(float(user_fund.get_units()) * float(mf_history.get_nav()), 2)
-            mf_history.set_asOnValue(as_on_value)
+            if user_fund:
+                as_on_value = round(float(user_fund.get_units()) * float(mf_history.get_nav()), 2)
+                mf_history.set_asOnValue(as_on_value)
 
             print(str(mf_history))
             historyList.append(mf_history)
@@ -74,8 +73,8 @@ def view_mf_history(user_id, mf_id, purchase_date):
 
     mf_id_list = mf_id.split("#")
     mf_id = mf_id_list[0]
-    if len(mf_id_list) > 1:
-        mf_purchase_date = mf_id_list[1]
+    # if len(mf_id_list) > 1:
+    #    mf_purchase_date = mf_id_list[1]
 
     historyList = get_funds_history(mf_id, user_fund, purchase_date, None)
     return transform_view_history(historyList, user_fund_list)
