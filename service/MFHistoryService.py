@@ -29,7 +29,7 @@ def add_mf_nav_history(mf_history, dynamodb=None):
     return response
 
 
-def get_funds_history(mf_id, user_fund=None, purchase_date=None, dynamodb=None):
+def get_funds_history(mf_id, user_fund=None, purchase_date=None, dynamodb=None, sortAsc=False):
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
 
@@ -37,7 +37,7 @@ def get_funds_history(mf_id, user_fund=None, purchase_date=None, dynamodb=None):
 
     response = table.query(
         KeyConditionExpression=Key('mf_id').eq(mf_id), # & Key('as_on').gte(purchase_date),
-        ScanIndexForward=False,
+        ScanIndexForward=sortAsc,
     )
 
     print (str(response))
@@ -66,6 +66,20 @@ def get_funds_history(mf_id, user_fund=None, purchase_date=None, dynamodb=None):
 
     return historyList
 
+
+def graph_mf_history(user_id, mf_id):
+    user_fund_list = UserMFService.get_user_and_fund_by_id(user_id, mf_id)
+    user_fund = user_fund_list[0]
+
+    mf_id_list = mf_id.split("#")
+    mf_id = mf_id_list[0]
+
+    historyList = get_funds_history(mf_id, user_fund, None, None, sortAsc=True)
+    graph_data = {}
+    for history in historyList:
+        graph_data[float(history.get_nav())] = str(history.get_asOn())
+
+    return graph_data
 
 def view_mf_history(user_id, mf_id, purchase_date):
     user_fund_list = UserMFService.get_user_and_fund_by_id(user_id, mf_id)

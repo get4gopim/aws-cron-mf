@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>CanvasJS Chart Python Flask Sample</title>
+        <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        <script type="text/javascript">
+            window.onload = function() {
+                var dps = [
+                            {% for key,value in graph_data.items() %}
+                                { y: {{key}} },
+                            {% endfor %}
+                ];
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    title:{
+                        text: "CanvasJS Chart Python Flask Sample"
+                    },
+                    data: [
+                    {
+                        // Change type to "doughnut", "line", "splineArea", etc.
+                        type: "line",
+                        dataPoints: dps
+                    }
+                    ]
+                });
+                chart.render();
+            }
+        </script>
+        <style type="text/css">
+        </style>
+    </head>
+    <body>
+        <div id="chartContainer" style="width: 100%; height: 300px;"></div>
+    </body>
+</html>
