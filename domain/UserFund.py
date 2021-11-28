@@ -12,7 +12,8 @@ class UserFund:
         self.__actualValue = actualValue
         self.__units = units
         self.__latestValue = latestValue
-        self.__profitLoss = profitLoss
+        if profitLoss:
+            self.__profitLoss = float(profitLoss)
         self.__dateCreated = dateCreated
         self.__dateModified = dateModified
         self.type = ''
@@ -70,7 +71,7 @@ class UserFund:
         return self.__profitLoss
 
     def set_profitLoss(self, profitLoss):
-        self.__profitLoss = profitLoss
+        self.__profitLoss = float(profitLoss)
 
     def get_dateCreated(self):
         return self.__dateCreated

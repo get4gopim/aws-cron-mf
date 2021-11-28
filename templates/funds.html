@@ -25,6 +25,90 @@
         }
 
     </style>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script type="text/javascript">
+            window.onload = function () {
+
+                var dps = [
+                    {% for row in view_fund.fundList %}
+                        {% if (row.get_percentile() < 0) %}
+                            { y: {{ row.get_profitLoss() }}, label: "{{ row.get_fundInfo().get_mfName() }}", color: "red" },
+                        {% else %}
+                            { y: {{ row.get_profitLoss() }}, label: "{{ row.get_fundInfo().get_mfName() }}" },
+                        {% endif %}
+                    {% endfor %}
+                ];
+
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    theme: "light2",
+                    indexLabelFontSize: 10,
+                    title:{
+                        text: "Portfolio Profit",
+                        fontSize: 14,
+                    },
+                    axisY: {
+                        title: "Profit (INR)",
+                        scaleBreaks: {
+                            autoCalculate: false
+                        }
+                    },
+                    data: [{
+                        type: "column",
+                        showInLegend: true,
+		                legendMarkerColor: "grey",
+                        legendText: "Investments = INR",
+                        dataPoints: dps
+                    }]
+                });
+                chart.render();
+
+                var allocation_dps = [
+                            {% for row in view_fund.fundList %}
+                                { y: {{ row.get_purchaseValue() }}, name : "{{ row.get_fundInfo().get_mfName() }}", exploded: true },
+                            {% endfor %}
+                ];
+
+                var chart = new CanvasJS.Chart("chartAllocation", {
+                    exportEnabled: true,
+                    animationEnabled: true,
+                    theme: "light2",
+                    indexLabelFontSize: 14,
+                    title:{
+                        text: "Portfolio Allocation",
+                        fontSize: 14,
+                    },
+                    legend:{
+                        cursor: "pointer",
+                        itemclick: explodePie
+                    },
+                    axisY: {
+                        title: "Profit (INR)",
+                        scaleBreaks: {
+                            autoCalculate: true
+                        }
+                    },
+                    data: [{
+                        type: "pie",
+                        showInLegend: true,
+                        toolTipContent: "{name}: <strong>{y}%</strong>",
+                        indexLabel: "{name} - {y} ₹",
+                        dataPoints: allocation_dps
+                    }]
+                });
+                chart.render();
+        }
+
+        function explodePie (e) {
+            if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+                e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+            } else {
+                e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+            }
+            e.chart.render();
+
+        }
+    </script>
 </head>
 <body>
 
@@ -78,6 +162,20 @@
 
 </table>
 
+<br/>
+<br/>
+
+<table>
+    <tr>
+        <td valign="top">
+            <div id="chartContainer" style="height: 375px; width: 100%;"></div>
+        </td>
+        <td valign="top">
+            <div id="chartAllocation" style="height: 375px; width: 100%;"></div>
+        </td>
+    </tr>
+</table>
+
     <br />
     <br />
 
@@ -104,12 +202,13 @@
                 <td>{{ row.get_fundInfo().get_nav() }}</td>
                 <td>{{ row.get_fundInfo().get_asOn() }}</td>
                 <td>{{ row.get_purchaseValue() }}</td>
-                <td>{{ row.get_profitLoss() }}</td>
 
                 {% if (row.get_percentile() < 0) %}
                     <td style="color: red;">{{ row.get_percentile() }} %</td>
+                    <td style="color: red;">{{ row.get_profitLoss() }}</td>
                 {% else %}
                     <td style="color: blue;">{{ row.get_percentile() }} %</td>
+                    <td style="color: blue;">{{ row.get_profitLoss() }}</td>
                 {% endif %}
 
                 <td>{{ row.get_dateModified() }}</td>

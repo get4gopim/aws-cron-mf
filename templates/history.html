@@ -34,7 +34,6 @@
                                 { x: new Date( {{ row.asonyear }}, {{ row.asonmonth }}, {{ row.asonday }} ), y: {{ row.get_nav() }} },
                             {% endfor %}
                 ];
-                var title = "Nav Change Per Day";
                 var fundname = "{{ view_history.userFund.get_fundInfo().get_mfName() }}";
 
                 var line_color = "#6B9E21";
@@ -44,9 +43,11 @@
 
                 var chart = new CanvasJS.Chart("chartContainer", {
                     animationEnabled: true,
-                    zoomEnabled: true,
+                    zoomEnabled: false,
+                    indexLabelFontSize: 14,
                     title:{
-                        text: title
+                        text: "Nav Change Per Day",
+                        fontSize: 16,
                     },
                     axisX:{
                         title: "As On",
