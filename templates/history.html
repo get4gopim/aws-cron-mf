@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <title>Mutal Fund History</title>
     <style>
         table {
@@ -24,6 +26,42 @@
           padding-right: 10px;
         }
     </style>
+    <script type="text/javascript">
+            window.onload = function () {
+
+                var dps = [
+                            {% for row in view_history.historyList %}
+                                { x: new Date( {{ row.asonyear }}, {{ row.asonmonth }}, {{ row.asonday }} ), y: {{ row.get_nav() }} },
+                            {% endfor %}
+                ];
+                var title = "Nav Change Per Day";
+
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    title:{
+                        text: title
+                    },
+                    axisX:{
+                        title: "As On",
+                        valueFormatString: "DD MMM"
+                    },
+                    axisY: {
+                        title: "NAV",
+                        scaleBreaks: {
+                            autoCalculate: true
+                        }
+                    },
+                    data: [{
+                        type: "line",
+                        xValueFormatString: "DD MMM",
+                        color: "#F08080",
+                        dataPoints: dps
+                    }]
+                });
+                chart.render();
+
+        }
+    </script>
 </head>
 <body>
 
@@ -85,6 +123,10 @@
     <br />
     ** Stamp Duty : <span style="color:blue">( {{ view_history.userFund.get_stampPercent() }} % )</span>
     <br />
+    <br />
+
+    <div id="chartContainer" style="height: 370px; width: 75%;"></div>
+
     <br />
 
     {% if view_history.historyList %}

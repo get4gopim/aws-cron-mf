@@ -1,14 +1,20 @@
+import datetime
 
 class MFHistory:
 
     def __init__(self, mfId, asOn, nav, lastUpdated):
         self.__mfId = mfId
         self.__asOn = asOn
-        self.__nav = nav
+        self.__nav = float(nav)
         self.__lastUpdated = lastUpdated
         self.error = None
         self.mfName = ''
         self.asOnValue = 0
+
+        date = datetime.datetime.strptime(asOn, "%d-%b-%Y")
+        self.asonday = int(date.day)
+        self.asonmonth = int(date.month) - 1
+        self.asonyear = int(date.year)
 
     def get_error(self):
         return self.error

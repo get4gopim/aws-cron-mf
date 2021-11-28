@@ -2,34 +2,48 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>CanvasJS Chart Python Flask Sample</title>
+        <title>{{ view_history.userFund.get_fundInfo().get_mfName() }}</title>
         <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
         <script type="text/javascript">
-            window.onload = function() {
+            window.onload = function () {
+
                 var dps = [
-                            {% for key,value in graph_data.items() %}
-                                { y: {{key}} },
+                            {% for row in view_history.historyList %}
+                                { x: new Date( {{ row.asonyear }}, {{ row.asonmonth }}, {{ row.asonday }} ), y: {{ row.get_nav() }} },
                             {% endfor %}
                 ];
+                var title = "{{ view_history.userFund.get_fundInfo().get_mfName() }}";
+
                 var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
                     title:{
-                        text: "CanvasJS Chart Python Flask Sample"
+                        text: title
                     },
-                    data: [
-                    {
-                        // Change type to "doughnut", "line", "splineArea", etc.
+                    axisX:{
+                        title: "As On",
+                        valueFormatString: "DD MMM"
+                    },
+                    axisY: {
+                        title: "NAV",
+                        scaleBreaks: {
+                            autoCalculate: true
+                        }
+                    },
+                    data: [{
                         type: "line",
+                        xValueFormatString: "DD MMM",
+                        color: "#F08080",
                         dataPoints: dps
-                    }
-                    ]
+                    }]
                 });
                 chart.render();
-            }
+
+        }
         </script>
         <style type="text/css">
         </style>
     </head>
     <body>
-        <div id="chartContainer" style="width: 100%; height: 300px;"></div>
+        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
     </body>
 </html>

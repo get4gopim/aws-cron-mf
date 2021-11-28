@@ -75,11 +75,13 @@ def graph_mf_history(user_id, mf_id):
     mf_id = mf_id_list[0]
 
     historyList = get_funds_history(mf_id, user_fund, None, None, sortAsc=True)
-    graph_data = {}
-    for history in historyList:
-        graph_data[float(history.get_nav())] = str(history.get_asOn())
+    return transform_view_history(historyList, user_fund_list)
 
-    return graph_data
+    #graph_data = {}
+    #for history in historyList:
+    #    graph_data[float(history.get_nav())] = str(history.get_asOn())
+
+    #return historyList
 
 def view_mf_history(user_id, mf_id, purchase_date):
     user_fund_list = UserMFService.get_user_and_fund_by_id(user_id, mf_id)

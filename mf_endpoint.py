@@ -23,10 +23,10 @@ LOGGER = logging.getLogger(__name__)
 @app.route('/hello/')
 @app.route('/hello/<name>')
 def hello(name=None):
-    graph_data = MFHistoryService.graph_mf_history('user1', 'MES016')
-    for key, value in graph_data.items():
-        print(key, ' : ', value)
-    return render_template('graph.html', graph_data=graph_data)
+    view_history = MFHistoryService.graph_mf_history('user1', 'MES016')
+    #for key, value in graph_data.items():
+    #    print(key, ' : ', value)
+    return render_template('graph.html', view_history=view_history)
 
 
 @app.route('/funds/<user_id>/update')
