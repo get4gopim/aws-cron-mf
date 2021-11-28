@@ -5,6 +5,7 @@ class ViewHistory:
 
     def __init__(self):
         self.historyList = []
+        self.sortedList = []
         self.userFund = None
         self.navDiff = 0
 

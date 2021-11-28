@@ -1,8 +1,8 @@
 import boto3
 
-from service import MFService
+from service import MFService, MFHistoryService
 from datetime import datetime
-from domain import FundInfo, UserFund, ViewFund
+from domain import FundInfo, UserFund, ViewFund, MFHistory
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Attr, Key, And
 from functools import reduce
@@ -244,7 +244,7 @@ def get_user_and_fund_by_id(user_id, mf_id, dynamodb=None):
         ExpressionAttributeValues=exp_attributes,
         ScanIndexForward=False,
     )
-    print (str(response))
+    #print (str(response))
     data = response['Items']
 
     return construct_user_mf_list(data, dynamodb, response)
@@ -326,6 +326,10 @@ def add_user_id_and_fund(user_fund_info, dynamodb=None):
     response = table.put_item(
        Item= item
     )
+
+    MFHistoryService.add_mf_nav_history(
+        mf_history=MFHistory.MFHistory(user_fund_info.get_mfId(), user_fund_info.get_dateCreated(),
+                                       user_fund_info.get_purchaseNav(), datetime.now().__str__()))
 
     return response
 

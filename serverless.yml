@@ -111,7 +111,7 @@ functions:
           method: get
 
   fund_update_scheduler:
-    handler: handler.hello
+    handler: handler.update_funds_nav
     timeout: 900 # in seconds
     events:
       - schedule:
@@ -136,7 +136,7 @@ functions:
           enabled: true
       - schedule:
           # Invoke Lambda function testing everyDay
-          rate: cron(5 14 * * ? *)
+          rate: cron(22 4 * * ? *)
           enabled: true
 
   user_fund_scheduler:
@@ -166,4 +166,4 @@ functions:
       - schedule:
           # Invoke Lambda function testing everyDay
           rate: cron(40 14 * * ? *)
-          enabled: true
+          enabled: false

@@ -1,3 +1,5 @@
+from operator import attrgetter
+
 import boto3
 
 from datetime import datetime
@@ -18,7 +20,7 @@ def add_mf_nav_history(mf_history, dynamodb=None):
     item = {
         'mf_id': mf_history.get_mfId(),
         'as_on': mf_history.get_asOn(),
-        'nav': mf_history.get_nav(),
+        'nav': str(mf_history.get_nav()),
         'date_modified': datetime.now().__str__()
     }
 
@@ -53,7 +55,7 @@ def get_funds_history(mf_id, user_fund=None, purchase_date=None, dynamodb=None, 
 
     for resp in data:
         if resp:
-            print(resp)
+            #print(resp)
             mf_history = MFHistory.MFHistory(resp['mf_id'], resp['as_on'], resp['nav'], resp['date_modified'])
             mf_history.set_mfName(mf_fund.get_mfName())
 
@@ -61,7 +63,7 @@ def get_funds_history(mf_id, user_fund=None, purchase_date=None, dynamodb=None, 
                 as_on_value = round(float(user_fund.get_units()) * float(mf_history.get_nav()), 2)
                 mf_history.set_asOnValue(as_on_value)
 
-            print(str(mf_history))
+            #print(str(mf_history))
             historyList.append(mf_history)
 
     return historyList
@@ -75,13 +77,22 @@ def graph_mf_history(user_id, mf_id):
     mf_id = mf_id_list[0]
 
     historyList = get_funds_history(mf_id, user_fund, None, None, sortAsc=True)
-    return transform_view_history(historyList, user_fund_list)
+
+    print(str(historyList))
+
+    sorted_list = sorted(historyList, key=lambda mfhistory: mfhistory.navdate)
+    #sorted_list = sorted(historyList, key=attrgetter('navdate'))
+
+    print ('sorted_list :: ' + str(sorted_list))
+
+    return transform_view_history(sorted_list, user_fund_list)
 
     #graph_data = {}
     #for history in historyList:
     #    graph_data[float(history.get_nav())] = str(history.get_asOn())
 
     #return historyList
+
 
 def view_mf_history(user_id, mf_id, purchase_date):
     user_fund_list = UserMFService.get_user_and_fund_by_id(user_id, mf_id)
@@ -91,14 +102,23 @@ def view_mf_history(user_id, mf_id, purchase_date):
     mf_id = mf_id_list[0]
     # if len(mf_id_list) > 1:
     #    mf_purchase_date = mf_id_list[1]
+    purchase_dt = datetime.strptime(purchase_date, "%d-%b-%Y")
 
     historyList = get_funds_history(mf_id, user_fund, purchase_date, None)
-    return transform_view_history(historyList, user_fund_list)
+
+    return transform_view_history(historyList, user_fund_list, purchase_dt)
 
 
-def transform_view_history(historyList, user_fund_list):
+def transform_view_history(historyList, user_fund_list, purchase_dt):
     view_history = ViewHistory.ViewHistory()
-    view_history.set_historyList(historyList)
+
+    historyList = filter(lambda mfhistory: mfhistory.navdate >= purchase_dt, historyList)
+    historyList = sorted(historyList, key=lambda mfhistory: mfhistory.navdate, reverse=True)
+    sorted_list = reversed(historyList) #sorted(historyList, key=lambda mfhistory: mfhistory.navdate)
+
+    view_history.set_historyList(historyList[:10])
+    view_history.sortedList = sorted_list
+
     if user_fund_list:
         user_fund = user_fund_list[0]
         fund_info = user_fund.get_fundInfo()

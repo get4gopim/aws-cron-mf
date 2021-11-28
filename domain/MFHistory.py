@@ -12,6 +12,7 @@ class MFHistory:
         self.asOnValue = 0
 
         date = datetime.datetime.strptime(asOn, "%d-%b-%Y")
+        self.navdate = date
         self.asonday = int(date.day)
         self.asonmonth = int(date.month) - 1
         self.asonyear = int(date.year)
@@ -47,7 +48,7 @@ class MFHistory:
         return self.asOnValue
 
     def __str__(self):
-        return "FundInfo: [id: " + str(self.__mfId) + ", nav: " + str(self.__nav) + ", asOn: " + str(self.__asOn) + ", lastUpdated: " + str(self.__lastUpdated) + "]"
+        return "MFHistory: [id: " + str(self.__mfId) + ", nav: " + str(self.__nav) + ", asOn: " + str(self.__asOn) + ", lastUpdated: " + str(self.__lastUpdated)  + ", navdate: " + str(self.navdate)  + "]"
 
     def serialize(self):
         return {

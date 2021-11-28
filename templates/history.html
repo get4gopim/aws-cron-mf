@@ -30,14 +30,21 @@
             window.onload = function () {
 
                 var dps = [
-                            {% for row in view_history.historyList %}
+                            {% for row in view_history.sortedList %}
                                 { x: new Date( {{ row.asonyear }}, {{ row.asonmonth }}, {{ row.asonday }} ), y: {{ row.get_nav() }} },
                             {% endfor %}
                 ];
                 var title = "Nav Change Per Day";
+                var fundname = "{{ view_history.userFund.get_fundInfo().get_mfName() }}";
+
+                var line_color = "#6B9E21";
+                {% if (view_history.get_navDiff() < 0) %}
+                    line_color = "#F08080";
+                {% endif %}
 
                 var chart = new CanvasJS.Chart("chartContainer", {
                     animationEnabled: true,
+                    zoomEnabled: true,
                     title:{
                         text: title
                     },
@@ -46,15 +53,16 @@
                         valueFormatString: "DD MMM"
                     },
                     axisY: {
-                        title: "NAV",
+                        title: "Nav (INR)",
                         scaleBreaks: {
                             autoCalculate: true
                         }
                     },
                     data: [{
                         type: "line",
+                        name: fundname,
                         xValueFormatString: "DD MMM",
-                        color: "#F08080",
+                        color: line_color,
                         dataPoints: dps
                     }]
                 });

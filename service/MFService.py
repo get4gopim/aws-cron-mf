@@ -1,7 +1,7 @@
 import boto3
 
 from domain import FundInfo, MFHistory
-from service import MFHistoryService
+from service import MFHistoryService, HtmlParser2
 from botocore.exceptions import ClientError
 from datetime import datetime
 
@@ -86,6 +86,7 @@ def add_fund(fundInfo, dynamodb=None):
     table = dynamodb.Table('mf_nav_latest')
 
     print(str(fundInfo))
+    fundInfo = fetch_fund_outbound(fundInfo)
 
     item = {
         'mf_id': fundInfo.get_mfId(),
@@ -101,7 +102,19 @@ def add_fund(fundInfo, dynamodb=None):
        Item= item
     )
 
+    MFHistoryService.add_mf_nav_history(mf_history=MFHistory.MFHistory(fundInfo.get_mfId(), fundInfo.get_asOn(),
+                                                                       fundInfo.get_nav(), datetime.now().__str__()))
+
     return response
+
+
+def fetch_fund_outbound(fund_info):
+    fund_url = fund_info.get_mfUrl()
+    info = HtmlParser2.call_fund_api(fund_url)
+    mf = FundInfo.FundInfo(fund_info.get_mfId(), fund_info.get_mfUrl(), info.get_mfName(), info.get_asOn(),
+                           info.get_nav(), datetime.now().__str__())
+    mf.set_category(fund_info.get_category())
+    return mf
 
 
 def update_fund(fundInfo, dynamodb=None):
@@ -109,6 +122,8 @@ def update_fund(fundInfo, dynamodb=None):
         dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
 
     table = dynamodb.Table('mf_nav_latest')
+
+    fundInfo = fetch_fund_outbound(fundInfo)
 
     response = table.update_item(
         Key={
@@ -124,5 +139,8 @@ def update_fund(fundInfo, dynamodb=None):
         },
         ReturnValues="UPDATED_NEW"
     )
+
+    MFHistoryService.add_mf_nav_history(mf_history=MFHistory.MFHistory(fundInfo.get_mfId(), fundInfo.get_asOn(),
+                                                                       fundInfo.get_nav(), datetime.now().__str__()))
 
     return response

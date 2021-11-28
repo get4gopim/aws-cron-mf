@@ -5,23 +5,15 @@ from datetime import datetime
 from service import HtmlParser2, MFService, MFHistoryService, UserMFService
 
 
-def hello(event, context):
+def update_funds_nav(event, context):
     print ('update all started :: ' + datetime.now().__str__())
 
     funds_list = MFService.get_all_funds()
 
     for fund_info in funds_list:
-        print(fund_info)
-        fund_url = fund_info.get_mfUrl()
-        info = HtmlParser2.call_fund_api(fund_url)
-        mf = FundInfo.FundInfo(fund_info.get_mfId(), fund_info.get_mfUrl(), info.get_mfName(), info.get_asOn(), info.get_nav(), datetime.now().__str__())
-
-        mf.set_category(fund_info.get_category())
-        MFService.update_fund(mf)
-
         try:
-            MFHistoryService.add_mf_nav_history(mf_history=MFHistory.MFHistory(fund_info.get_mfId(), info.get_asOn(),
-                                                                               info.get_nav(), datetime.now().__str__()))
+            print(fund_info)
+            MFService.update_fund(fund_info)
         except BaseException as ex:
             print(f'Unable to update mf_history table id : {fund_info.get_mfId()} ex: {repr(ex)}')
 
