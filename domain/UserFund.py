@@ -24,6 +24,7 @@ class UserFund:
         # self.asOn = ''
         self.percentile = ''
         self.noOfDays = 0
+        self.noOfFunds = 0
 
     def get_error(self):
         return self.error

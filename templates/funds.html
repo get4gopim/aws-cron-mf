@@ -192,10 +192,10 @@
             </tr>
             {% for row in view_fund.fundList %}
             <tr>
-                {% if row.get_type() == 'SIP' %}
-                    <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_fundInfo().get_mfId() }}/sip">{{ row.get_fundInfo().get_mfName() }} (SIP)</a></td>
-                {% else %}
+                {% if row.noOfFunds > 1 %}
                     <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_fundInfo().get_mfId() }}/sip">{{ row.get_fundInfo().get_mfName() }}</a></td>
+                {% else %}
+                    <td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_fundInfo().get_mfId() }}/date/{{ row.get_dateCreated() }}">{{ row.get_fundInfo().get_mfName() }}</a></td>
                     <!--<td><a href="/dev/funds/{{ row.get_userId() }}/history/{{ row.get_fundInfo().get_mfId() }}/date/{{ row.get_dateCreated() }}">{{ row.get_fundInfo().get_mfName() }}</a></td>-->
                 {% endif %}
 

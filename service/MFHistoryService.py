@@ -115,8 +115,16 @@ def transform_view_history(historyList, user_fund_list, purchase_dt):
     historyList = filter(lambda mfhistory: mfhistory.navdate >= purchase_dt, historyList)
     historyList = sorted(historyList, key=lambda mfhistory: mfhistory.navdate, reverse=True)
     sorted_list = reversed(historyList) #sorted(historyList, key=lambda mfhistory: mfhistory.navdate)
+    historyList = historyList[:10]
 
-    view_history.set_historyList(historyList[:10])
+    if historyList:
+        for x in range(len(historyList)):
+            mfHistory = historyList[x]
+            if x < len(historyList)-1:
+                next_hist_row = historyList[x+1]
+                mfHistory.diffPrevAsOnValue = round(mfHistory.get_asOnValue() - next_hist_row.get_asOnValue(), 1)
+
+    view_history.set_historyList(historyList)
     view_history.sortedList = sorted_list
 
     if user_fund_list:

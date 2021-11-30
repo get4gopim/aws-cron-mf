@@ -151,7 +151,13 @@
             <tr>
                 <td>{{ row.get_asOn() }}</td>
                 <td>{{ row.get_nav() }}</td>
-                <td>{{ row.get_asOnValue() }}</td>
+
+                {% if (row.diffPrevAsOnValue < 0) %}
+                    <td>{{ row.get_asOnValue() }} <span style="color: red;">( {{ row.diffPrevAsOnValue }} )</span></td>
+                {% else %}
+                    <td>{{ row.get_asOnValue() }} <span style="color: blue;">( {{ row.diffPrevAsOnValue }} )</span></td>
+                {% endif %}
+
                 <td>{{ row.get_lastUpdated() }}</td>
             </tr>
             {% endfor %}

@@ -46,8 +46,10 @@ def reduce_user_mf_funds(user_id):
             user_fund.set_profitLoss(profit_loss)
 
             user_dict[mf_id] = user_fund
+            user_fund.noOfFunds = old_fund.noOfFunds + 1
         else: # Add Element
             user_dict[mf_id] = user_fund
+            user_fund.noOfFunds+=1
 
     for key, value in user_dict.items():
         fund_list.append(value)
