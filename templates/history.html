@@ -42,6 +42,8 @@
                 {% endif %}
 
                 var chart = new CanvasJS.Chart("chartContainer", {
+                    exportEnabled: true,
+                    exportFileName: "Nav History",
                     animationEnabled: true,
                     zoomEnabled: false,
                     indexLabelFontSize: 14,
@@ -51,12 +53,20 @@
                     },
                     axisX:{
                         title: "As On",
-                        valueFormatString: "DD MMM"
+                        valueFormatString: "DD MMM",
+                        crosshair: {
+                            enabled: true,
+                            snapToDataPoint: true
+                        }
                     },
                     axisY: {
                         title: "Nav (INR)",
-                        scaleBreaks: {
-                            autoCalculate: true
+                        crosshair: {
+                            enabled: true,
+                            snapToDataPoint: true,
+                            labelFormatter: function(e) {
+                                return "$" + CanvasJS.formatNumber(e.value, "##0.00");
+                            }
                         }
                     },
                     data: [{

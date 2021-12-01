@@ -23,7 +23,16 @@
           padding-left: 10px;
           padding-right: 10px;
         }
-
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+       }
+       .col {
+            float: left;
+            width: 50%;
+            height: 400px;
+       }
     </style>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script type="text/javascript">
@@ -41,6 +50,8 @@
 
                 var chart = new CanvasJS.Chart("chartContainer", {
                     animationEnabled: true,
+                    exportEnabled: true,
+                    exportFileName: "Portfolio Allocation",
                     theme: "light2",
                     indexLabelFontSize: 10,
                     title:{
@@ -71,6 +82,7 @@
 
                 var chart = new CanvasJS.Chart("chartAllocation", {
                     exportEnabled: true,
+                    exportFileName: "Portfolio Allocation",
                     animationEnabled: true,
                     theme: "light2",
                     indexLabelFontSize: 14,
@@ -83,10 +95,7 @@
                         itemclick: explodePie
                     },
                     axisY: {
-                        title: "Profit (INR)",
-                        scaleBreaks: {
-                            autoCalculate: true
-                        }
+                        title: "Profit (INR)"
                     },
                     data: [{
                         type: "doughnut",
@@ -165,7 +174,7 @@
 <br/>
 <br/>
 
-<table>
+<!--<table>
     <tr>
         <td valign="top">
             <div id="chartContainer" style="height: 400px; width: 100%;"></div>
@@ -174,7 +183,12 @@
             <div id="chartAllocation" style="height: 400px; width: 100%;"></div>
         </td>
     </tr>
-</table>
+</table>-->
+
+<div class="row">
+  <div class="col" id="chartContainer"></div>
+  <div class="col" id="chartAllocation"></div>
+</div>
 
     <br />
     <br />
