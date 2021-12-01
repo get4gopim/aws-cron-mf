@@ -57,7 +57,7 @@
                         type: "column",
                         showInLegend: true,
 		                legendMarkerColor: "grey",
-                        legendText: "Investments = INR",
+                        legendText: "Profit = INR",
                         dataPoints: dps
                     }]
                 });
@@ -65,7 +65,7 @@
 
                 var allocation_dps = [
                             {% for row in view_fund.fundList %}
-                                { y: {{ row.get_purchaseValue() }}, name : "{{ row.get_fundInfo().get_mfName() }}", exploded: true },
+                                { y: {{ row.get_purchaseValue() }}, name : "{{ row.get_fundInfo().get_mfName() }}", improvement: "{{ row.get_percentile() }}",  exploded: true },
                             {% endfor %}
                 ];
 
@@ -89,10 +89,10 @@
                         }
                     },
                     data: [{
-                        type: "pie",
+                        type: "doughnut",
                         showInLegend: true,
-                        toolTipContent: "{name}: <strong>{y}%</strong>",
-                        indexLabel: "{name} - {y} ₹",
+                        toolTipContent: "{name}: <strong>{y}₹</strong><br />Growth: {improvement}%",
+                        indexLabel: "{name} - ₹ {y}",
                         dataPoints: allocation_dps
                     }]
                 });
@@ -168,10 +168,10 @@
 <table>
     <tr>
         <td valign="top">
-            <div id="chartContainer" style="height: 375px; width: 100%;"></div>
+            <div id="chartContainer" style="height: 400px; width: 100%;"></div>
         </td>
         <td valign="top">
-            <div id="chartAllocation" style="height: 375px; width: 100%;"></div>
+            <div id="chartAllocation" style="height: 400px; width: 100%;"></div>
         </td>
     </tr>
 </table>
@@ -204,11 +204,11 @@
                 <td>{{ row.get_purchaseValue() }}</td>
 
                 {% if (row.get_percentile() < 0) %}
-                    <td style="color: red;">{{ row.get_percentile() }} %</td>
                     <td style="color: red;">{{ row.get_profitLoss() }}</td>
+                    <td style="color: red;">{{ row.get_percentile() }} %</td>
                 {% else %}
-                    <td style="color: blue;">{{ row.get_percentile() }} %</td>
                     <td style="color: blue;">{{ row.get_profitLoss() }}</td>
+                    <td style="color: blue;">{{ row.get_percentile() }} %</td>
                 {% endif %}
 
                 <td>{{ row.get_dateModified() }}</td>

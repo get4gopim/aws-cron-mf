@@ -12,8 +12,12 @@ class UserFund:
         self.__actualValue = actualValue
         self.__units = units
         self.__latestValue = latestValue
+
         if profitLoss:
             self.__profitLoss = float(profitLoss)
+        else:
+            self.__profitLoss = 0
+
         self.__dateCreated = dateCreated
         self.__dateModified = dateModified
         self.type = ''
