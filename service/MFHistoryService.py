@@ -112,21 +112,6 @@ def view_mf_history(user_id, mf_id, purchase_date):
 def transform_view_history(historyList, user_fund_list, purchase_dt):
     view_history = ViewHistory.ViewHistory()
 
-    historyList = filter(lambda mfhistory: mfhistory.navdate >= purchase_dt, historyList)
-    historyList = sorted(historyList, key=lambda mfhistory: mfhistory.navdate, reverse=True)
-    sorted_list = reversed(historyList) #sorted(historyList, key=lambda mfhistory: mfhistory.navdate)
-    historyList = historyList[:10]
-
-    if historyList:
-        for x in range(len(historyList)):
-            mfHistory = historyList[x]
-            if x < len(historyList)-1:
-                next_hist_row = historyList[x+1]
-                mfHistory.diffPrevAsOnValue = round(mfHistory.get_asOnValue() - next_hist_row.get_asOnValue(), 1)
-
-    view_history.set_historyList(historyList)
-    view_history.sortedList = sorted_list
-
     if user_fund_list:
         user_fund = user_fund_list[0]
         fund_info = user_fund.get_fundInfo()
@@ -134,5 +119,21 @@ def transform_view_history(historyList, user_fund_list, purchase_dt):
 
         nav_diff = round(float(fund_info.get_nav()) - float(user_fund.get_purchaseNav()), 4)
         view_history.set_navDiff(nav_diff)
+
+    historyList = filter(lambda mfhistory: mfhistory.navdate >= purchase_dt, historyList)
+    historyList = sorted(historyList, key=lambda mfhistory: mfhistory.navdate, reverse=True)
+    sorted_list = reversed(historyList) #sorted(historyList, key=lambda mfhistory: mfhistory.navdate)
+
+    if historyList:
+        for x in range(len(historyList)):
+            mfHistory = historyList[x]
+            if x < len(historyList)-1:
+                next_hist_row = historyList[x+1]
+                mfHistory.diffPrevAsOnValue = round(mfHistory.get_asOnValue() - next_hist_row.get_asOnValue(), 1)
+                mfHistory.navGrowth = round(((mfHistory.get_nav() - user_fund.get_purchaseNav()) / user_fund.get_purchaseNav()) * 100, 2)
+
+    historyList = historyList[:10]
+    view_history.set_historyList(historyList)
+    view_history.sortedList = sorted_list
 
     return view_history

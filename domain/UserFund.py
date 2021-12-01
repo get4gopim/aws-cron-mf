@@ -7,7 +7,12 @@ class UserFund:
         self.__userId = userId
         self.__mfId = mfId
         self.__purchaseValue = purchaseValue
-        self.__purchaseNav = purchaseNav
+
+        if purchaseNav:
+            self.__purchaseNav = float(purchaseNav)
+        else:
+            self.__purchaseNav = 0
+
         self.__stampPercent = stampPercent
         self.__actualValue = actualValue
         self.__units = units

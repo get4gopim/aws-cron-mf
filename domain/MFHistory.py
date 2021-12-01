@@ -11,6 +11,7 @@ class MFHistory:
         self.mfName = ''
         self.asOnValue = 0
         self.diffPrevAsOnValue = 0
+        self.navGrowth = 0
 
         date = datetime.datetime.strptime(asOn, "%d-%b-%Y")
         self.navdate = date
