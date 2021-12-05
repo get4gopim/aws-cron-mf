@@ -146,6 +146,6 @@ if __name__ == '__main__':
     # call_weather_forecast('thalambur')
     #call_weather_api('4ef51d4289943c7792cbe77dee741bff9216f591eed796d7a5d598c38828957d')
     # call_fuel_api()
-    # call_gold_api()
-    call_fund_api()
+    #call_gold_api()
+    call_fund_api(hdfc_bond_url)
 
